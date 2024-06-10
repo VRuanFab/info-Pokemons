@@ -1,27 +1,24 @@
 import api from "../../api/api"
+import Info from "./Info_part"
 
-const test = api.get('pokemon/squirtle')
-.then((res)  =>  {
-    console.log(res.data)
-    let pokemon_image = document.createElement('img')
-    pokemon_image.src = res.data.sprites.front_default
-    document.getElementById('poke-image').appendChild(pokemon_image)
-    let poke_shiny = document.createElement('img')
-    poke_shiny.src = res.data.sprites.other.showdown.front_default
-    document.getElementById('poke-image').appendChild(poke_shiny)
-})
+// const test = api.get('pokemon/charizard')
+// .then((res)  =>  {
+//     console.log(res.data)
+// })
 
-test
 export default function Homepage(){
     return (
         <>
-        <div className="w-screen h-screen grid justify-center">
-                <div className="text-blue-500">
-                    this is my mainpage
-                </div>
-                <div id="poke-image">
+        <div className="w-screen h-screen grid justify-center content-center">
+            <div className="flex">
+                <div id="poke-image" className="w-[25rem] h-[30rem] bg-red-800 rounded-l-2xl rounded-r-md pl-[2 px] relative">
+                    <div className="absolute right-9 top-4 w-[80%] h-[90%] bg-red-400">
 
+                    </div>
                 </div>
+
+                {/* <Info/> */}
+            </div>
         </div>
         </>
     )
