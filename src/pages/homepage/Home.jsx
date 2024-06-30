@@ -1,32 +1,40 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import api from "../../api/api"
-// import Info from "./Info_part"
+import Pokemon_blocks from "../../assets/pokemons_blocks"
 
-const [pokemon, setPokemon] = useState([])
-
-
-api.get('pokemon/charizard')
-.then((res) => {
-    console.log(res.data)
-    const poke_class = {}
-    poke_class.nome = res.data.name;
-    poke_class.img = res.data.sprites.front_default;
-    setPokemon(poke_class)
-})
 
 export default function Homepage(){
+
+    const [pokemon, setPokemon] = useState([])
+
+useEffect(() => {
+
+    for (let i = 1; i <= 4; i++){
+    api.get(`pokemon/${i}`)
+        .then((res)  =>  {
+            const pokeObj = {
+                name: res.data.name,
+                img: res.data.sprites.front_default
+            }
+            setPokemon(pokeObj)
+        })
+        .catch((err) => {
+            console.log(err)
+        })
+    }
+}, [])
+
+
+
     return (
         <>
         <div className="w-screen h-screen grid justify-center content-center">
-            <div className="flex w-screen justify-center content-center">
-                <div id="poke-image" className="w-[80%] h-[60rem] bg-gray-600 rounded-md relative flex justify-center">
-                    <div className="mt-6 w-[95%] h-[95%] bg-gray-300 rounded-sm">
+            <div className="w-screen h-screen flex justify-center">
+                <div id="poke-image" className="mt-[3%] w-[90%] h-[90%] bg-gray-700 rounded-md relative flex justify-center">
+                    <div id="pokemon_body" className="mt-6 w-[90%] h-[90%] bg-gray-200 rounded-md">
 
-                        <div className="grid content-center w-fit border-2 text-center">
-                            <img id="poke" src={pokemon.img} alt="imagem"/>
-                            <label htmlFor="poke"> {pokemon.nome} </label>
-                        </div>
-                        
+                        <Pokemon_blocks nome_pokemon={pokemon.name} img_pokemon={pokemon.img}/>
+                         
                     </div>
                 </div>
 
