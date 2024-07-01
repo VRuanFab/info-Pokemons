@@ -42,7 +42,7 @@ useEffect(() => {
         <div className="w-screen h-screen grid justify-center content-center">
             <div className="w-screen h-screen flex justify-center">
                 <div id="poke-image" className="mt-[3%] w-[90%] h-[90%] bg-gray-700 rounded-md relative flex justify-center">
-                    <section id="pokemon_body" className="mt-6 w-[90%] h-[90%] bg-gray-200 rounded-md grid grid-cols-7 pt-14 pb-10 px-3 items-center justify-items-center">
+                    <section id="pokemon_body" className="mt-6 w-[90%] h-[90%] bg-gray-200 rounded-md grid pt-14 pb-10 px-3 items-center justify-items-center grid-cols-7">
                         {
                             arrayPokemons.map((infos) => {
                                 return(
