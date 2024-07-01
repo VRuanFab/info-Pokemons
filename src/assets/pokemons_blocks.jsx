@@ -1,13 +1,12 @@
+/* eslint-disable react/prop-types */
 
 export default function Pokemon_blocks(props){
     
 
     return (
         <>
-        <div className="grid text-center w-fit">
-            <img src={props.img_pokemon} alt="pokeImage" id="pokemon_img"/>
-            <label htmlFor="pokemon_img">{props.nome_pokemon}</label>
-        </div> 
+            <img src={props.img_pokemon} alt="pokeImage" id="pokemon_img" className="w-[6.4rem]"/>
+            <span className="font-semibold text-[17px] tracking-wide capitalize"> {props.nome_pokemon} </span>
         </>
     )
 }
