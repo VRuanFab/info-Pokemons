@@ -9,12 +9,37 @@ export default function Homepage(){
     // const [load, setLoad] = useState([])
 
 useEffect(() => {
+        // const page_pokemons = []
 
-   const page_pokemons = []
-    const pesq_pokemons = async () => {
-        try {
+    // const pesq_pokemons = async () => {
+    //     try {
+    //         for (let i = 1; i <= 21; i++){
+    //             await api.get(`pokemon/${i}`)
+    //                 .then((res)  =>  {
+    //                     const pokeObj = {
+    //                         name: res.data.name,
+    //                         img: res.data.sprites.front_default,
+    //                         id: res.data.id
+    //                     }
+    //                     page_pokemons.push(pokeObj)
+    //                 })
+    //                 .catch((err) => {
+    //                     console.log(err)
+    //                 })
+    //             }
+    //         setArraysPokemon(page_pokemons)
+    //     }catch(err){
+    //         console.log(err)
+    //     }
+    // }
+
+    // pesq_pokemons()
+
+    const pesq_pokemons = new Promise ((resolve, reject) => {
+        const page_pokemons = []
+
             for (let i = 1; i <= 21; i++){
-                await api.get(`pokemon/${i}`)
+                api.get(`pokemon/${i}`)
                     .then((res)  =>  {
                         const pokeObj = {
                             name: res.data.name,
@@ -22,18 +47,24 @@ useEffect(() => {
                             id: res.data.id
                         }
                         page_pokemons.push(pokeObj)
+                        console.log(i)
+                        if (page_pokemons.length === 21){
+                            resolve(page_pokemons)
+                        }
                     })
                     .catch((err) => {
                         console.log(err)
+                        reject(err)
                     })
                 }
-            setArraysPokemon(page_pokemons)
-        }catch(err){
-            console.log(err)
-        }
-    }
+    })
 
-    pesq_pokemons()
+    pesq_pokemons.then((data) => {
+        console.log(data)
+        setArraysPokemon(data)
+    }).catch((err) => {
+        console.log(err)
+    })
 }, [])
 
 
