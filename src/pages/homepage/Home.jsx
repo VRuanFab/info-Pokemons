@@ -7,33 +7,46 @@ export default function Homepage(){
 
     const [arrayPokemons, setArraysPokemon] = useState([])
     const [page, setPage] = useState(1)
-    const [pageMultiplier, setPageMultiplier] = useState(0)
+    // const [pageMultiplier, setPageMultiplier] = useState(0)
 
 useEffect(() => {
-        const page_pokemons = []
+        const pokemons_show = []
+
+    // async function self_pokemon(num) {
+    //     try {
+    //         await api.get(`pokemon/${num}`)
+    //                 .then((res)  =>  {
+    //                     const pokeObj = {
+    //                         name: res.data.name,
+    //                         img: res.data.sprites.front_default,
+    //                         id: res.data.id
+    //                     }
+    //                     page_pokemons.push(pokeObj)
+    //                     console.log(res)
+    //                 })
+    //                 .catch((err) => {
+    //                     console.log(err)
+    //                 })
+    //     setArraysPokemon(page_pokemons)
+    //     }catch(err){
+    //         console.log(err)
+    //     }
+    // }
+
+    // pesq_pokemons()
 
     const pesq_pokemons = async () => {
-        try {
-            for (let i = 0; i <= 20; i++){
-                await api.get(`pokemon/${i + page}`)
-                    .then((res)  =>  {
-                        const pokeObj = {
-                            name: res.data.name,
-                            img: res.data.sprites.front_default,
-                            id: res.data.id
-                        }
-                        page_pokemons.push(pokeObj)
-                    })
-                    .catch((err) => {
-                        console.log(err)
-                    })
+        try{
+            await api.get(`https://pokeapi.co/api/v2/pokemon?limit=21&offset=${0}`)
+            .then((res) => {
+                for (let i in res.data.results){
+                    pokemons_show.push(res.data.results[i])
                 }
-            setArraysPokemon(page_pokemons)
-        }catch(err){
+            })
+        } catch(err){
             console.log(err)
         }
     }
-
     pesq_pokemons()
 }, [])
 
