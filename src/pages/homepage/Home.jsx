@@ -6,40 +6,16 @@ import Pokemon_blocks from "../../assets/pokemons_blocks"
 export default function Homepage(){
 
     const [arrayPokemons, setArraysPokemon] = useState([])
-    // const [load, setLoad] = useState([])
+    const [page, setPage] = useState(1)
+    const [pageMultiplier, setPageMultiplier] = useState(0)
 
 useEffect(() => {
-        // const page_pokemons = []
-
-    // const pesq_pokemons = async () => {
-    //     try {
-    //         for (let i = 1; i <= 21; i++){
-    //             await api.get(`pokemon/${i}`)
-    //                 .then((res)  =>  {
-    //                     const pokeObj = {
-    //                         name: res.data.name,
-    //                         img: res.data.sprites.front_default,
-    //                         id: res.data.id
-    //                     }
-    //                     page_pokemons.push(pokeObj)
-    //                 })
-    //                 .catch((err) => {
-    //                     console.log(err)
-    //                 })
-    //             }
-    //         setArraysPokemon(page_pokemons)
-    //     }catch(err){
-    //         console.log(err)
-    //     }
-    // }
-
-    // pesq_pokemons()
-
-    const pesq_pokemons = new Promise ((resolve, reject) => {
         const page_pokemons = []
 
-            for (let i = 1; i <= 21; i++){
-                api.get(`pokemon/${i}`)
+    const pesq_pokemons = async () => {
+        try {
+            for (let i = 0; i <= 20; i++){
+                await api.get(`pokemon/${i + page}`)
                     .then((res)  =>  {
                         const pokeObj = {
                             name: res.data.name,
@@ -47,24 +23,18 @@ useEffect(() => {
                             id: res.data.id
                         }
                         page_pokemons.push(pokeObj)
-                        console.log(i)
-                        if (page_pokemons.length === 21){
-                            resolve(page_pokemons)
-                        }
                     })
                     .catch((err) => {
                         console.log(err)
-                        reject(err)
                     })
                 }
-    })
+            setArraysPokemon(page_pokemons)
+        }catch(err){
+            console.log(err)
+        }
+    }
 
-    pesq_pokemons.then((data) => {
-        console.log(data)
-        setArraysPokemon(data)
-    }).catch((err) => {
-        console.log(err)
-    })
+    pesq_pokemons()
 }, [])
 
 
@@ -73,7 +43,8 @@ useEffect(() => {
         <div className="w-screen h-screen grid justify-center content-center">
             <div className="w-screen h-screen flex justify-center">
                 <div id="poke-image" className="mt-[3%] w-[90%] h-[90%] bg-gray-700 rounded-md relative flex justify-center">
-                    <section id="pokemon_body" className="mt-6 w-[90%] h-[90%] bg-gray-200 rounded-md grid pt-14 pb-10 px-3 items-center justify-items-center grid-cols-7">
+                    <div id="pokemon_body" className="mt-6 w-[90%] h-[90%] bg-gray-200 rounded-md">
+                        <section className="h-[90%] w-full mt-10 grid px-3 items-center justify-items-center grid-cols-7 relative">
                         {
                             arrayPokemons.map((infos) => {
                                 return(
@@ -83,7 +54,12 @@ useEffect(() => {
                                     )
                             })
                         }
-                    </section>
+                        </section>
+
+                        <div className="absolute right-[11%]">
+                            {`< ${page} >`}
+                        </div>
+                    </div>
                 </div>
 
                 {/* <Info/> */}
