@@ -12,42 +12,45 @@ export default function Homepage(){
 useEffect(() => {
         const pokemons_show = []
 
-    // async function self_pokemon(num) {
-    //     try {
-    //         await api.get(`pokemon/${num}`)
-    //                 .then((res)  =>  {
-    //                     const pokeObj = {
-    //                         name: res.data.name,
-    //                         img: res.data.sprites.front_default,
-    //                         id: res.data.id
-    //                     }
-    //                     page_pokemons.push(pokeObj)
-    //                     console.log(res)
-    //                 })
-    //                 .catch((err) => {
-    //                     console.log(err)
-    //                 })
-    //     setArraysPokemon(page_pokemons)
-    //     }catch(err){
-    //         console.log(err)
-    //     }
-    // }
-
-    // pesq_pokemons()
-
-    const pesq_pokemons = async () => {
-        try{
-            await api.get(`https://pokeapi.co/api/v2/pokemon?limit=21&offset=${0}`)
-            .then((res) => {
-                for (let i in res.data.results){
-                    pokemons_show.push(res.data.results[i])
+    async function self_pokemon() {
+        try {
+            for (let i = 1; i <= 21; i++){
+            await api.get(`pokemon/${i + 42}`)
+                    .then((res)  =>  {
+                        const pokeObj = {
+                            name: res.data.name,
+                            img: res.data.sprites.front_default,
+                            id: res.data.id
+                        }
+                        pokemons_show.push(pokeObj)
+                    })
+                    .catch((err) => {
+                        console.log(err)
+                    })
                 }
-            })
-        } catch(err){
+                setArraysPokemon(pokemons_show)
+        }catch(err){
             console.log(err)
         }
     }
-    pesq_pokemons()
+
+    self_pokemon()
+
+    // const pesq_pokemons = async () => {
+    //     try{
+    //         await api.get(`https://pokeapi.co/api/v2/pokemon?limit=21&offset=${0}`)
+    //         .then((res) => {
+    //             for (let i in res.data.results){
+    //                 console.log(res.data)
+    //                 pokemons_show.push(res.data.results[i])
+    //             }
+    //         })
+    //     } catch(err){
+    //         console.log(err)
+    //     }
+        // setArraysPokemon(pokemons_show)
+    // }
+    // pesq_pokemons()
 }, [])
 
 
