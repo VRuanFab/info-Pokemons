@@ -3,6 +3,8 @@ import api from "../../api/api"
 import Pokemon_blocks from "../../assets/pokemons_blocks"
 
 
+import { FaCaretLeft, FaCaretRight } from "react-icons/fa";
+
 export default function Homepage(){
 
     const [arrayPokemons, setArraysPokemon] = useState([])
@@ -15,7 +17,8 @@ useEffect(() => {
     async function self_pokemon() {
         try {
             for (let i = 1; i <= 21; i++){
-            await api.get(`pokemon/${i + 42}`)
+            // await api.get(`pokemon/${i + (page * 21)}`)
+            await api.get(`pokemon/${i + (page * 21)}`)
                     .then((res)  =>  {
                         const pokeObj = {
                             name: res.data.name,
@@ -35,23 +38,7 @@ useEffect(() => {
     }
 
     self_pokemon()
-
-    // const pesq_pokemons = async () => {
-    //     try{
-    //         await api.get(`https://pokeapi.co/api/v2/pokemon?limit=21&offset=${0}`)
-    //         .then((res) => {
-    //             for (let i in res.data.results){
-    //                 console.log(res.data)
-    //                 pokemons_show.push(res.data.results[i])
-    //             }
-    //         })
-    //     } catch(err){
-    //         console.log(err)
-    //     }
-        // setArraysPokemon(pokemons_show)
-    // }
-    // pesq_pokemons()
-}, [])
+}, [page])
 
 
     return (
@@ -72,8 +59,8 @@ useEffect(() => {
                         }
                         </section>
 
-                        <div className="absolute right-[11%]">
-                            {`< ${page} >`}
+                        <div className="absolute right-[11%] flex items-center">
+                            {page === 0 ? <></> : <FaCaretLeft onClick={() => setPage(page - 1)} className="hover:cursor-pointer"/>} {page} <FaCaretRight onClick={() => setPage(page + 1)} className="hover:cursor-pointer"/>
                         </div>
                     </div>
                 </div>
