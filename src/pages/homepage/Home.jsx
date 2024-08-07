@@ -8,38 +8,26 @@ import { FaCaretLeft, FaCaretRight } from "react-icons/fa";
 export default function Homepage(){
 
     const [arrayPokemons, setArraysPokemon] = useState([])
-    const [page, setPage] = useState(1)
-    // const [pageMultiplier, setPageMultiplier] = useState(0)
-
+    const [page, setPage] = useState(0)
+    const pagination = page * 21
 useEffect(() => {
-        const pokemons_show = []
 
-    async function self_pokemon() {
-        try {
-            for (let i = 1; i <= 21; i++){
-            // await api.get(`pokemon/${i + (page * 21)}`)
-            await api.get(`pokemon/${i + (page * 21)}`)
-                    .then((res)  =>  {
-                        const pokeObj = {
-                            name: res.data.name,
-                            img: res.data.sprites.front_default,
-                            id: res.data.id
-                        }
-                        pokemons_show.push(pokeObj)
-                    })
-                    .catch((err) => {
-                        console.log(err)
-                    })
-                }
-                setArraysPokemon(pokemons_show)
-        }catch(err){
-            console.log(err)
-        }
+    const fetchPokemon = async () => {
+        const pokePromise = Array.from({ length: 21 }, (v, i) => {
+            return api.get(`pokemon/${i + 1 + pagination}`)
+        })
+
+        const results = await Promise.all(pokePromise)
+
+        const pokemons_show = results.map(res => ({
+            name: res.data.name,
+            img: res.data.sprites.front_default,
+            id: res.data.id
+        }))
+        setArraysPokemon(pokemons_show)
     }
-
-    self_pokemon()
+    fetchPokemon()
 }, [page])
-
 
     return (
         <>
@@ -60,7 +48,7 @@ useEffect(() => {
                         </section>
 
                         <div className="absolute right-[11%] flex items-center">
-                            {page === 0 ? <></> : <FaCaretLeft onClick={() => setPage(page - 1)} className="hover:cursor-pointer"/>} {page} <FaCaretRight onClick={() => setPage(page + 1)} className="hover:cursor-pointer"/>
+                            {page === 0 ? <></> : <FaCaretLeft onClick={() => setPage(page - 1)} className="hover:cursor-pointer"/>} {page + 1} <FaCaretRight onClick={() => setPage(page + 1)} className="hover:cursor-pointer"/>
                         </div>
                     </div>
                 </div>
