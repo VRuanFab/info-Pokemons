@@ -32,10 +32,13 @@ useEffect(() => {
     return (
         <>
         <div className="w-screen h-screen grid justify-center content-center">
-            <div className="w-screen h-screen flex justify-center">
-                <div id="poke-image" className="mt-[3%] w-[90%] h-[90%] bg-gray-700 rounded-md relative flex justify-center">
-                    <div id="pokemon_body" className="mt-6 w-[90%] h-[90%] bg-gray-200 rounded-md">
-                        <section className="h-[90%] w-full mt-10 grid px-3 items-center justify-items-center grid-cols-7 relative">
+            <div className="w-screen h-screen grid place-items-center">
+                <div id="poke-image" className="w-[90%] h-[90%] bg-gray-700 rounded-md relative grid">
+
+                    <div className="w-full h-fit bg-white">teste</div>
+
+                    <div id="pokemon_body" className="w-[90%] h-[95%] py-2 bg-gray-200 rounded-md place-self-center">
+                        <section className="h-[90%] w-full grid px-3 py-2 items-center justify-items-center grid-cols-7 relative">
                         {
                             arrayPokemons.map((infos) => {
                                 return(
@@ -47,12 +50,12 @@ useEffect(() => {
                         }
                         </section>
 
-                        <div className="absolute right-[11%] flex items-center">
+                        <div className="flex justify-end px-9 items-center">
                             {page === 0 ? <></> : <FaCaretLeft onClick={() => setPage(page - 1)} className="hover:cursor-pointer"/>} {page + 1} <FaCaretRight onClick={() => setPage(page + 1)} className="hover:cursor-pointer"/>
                         </div>
                     </div>
-                </div>
 
+                </div>
                 {/* <Info/> */}
             </div>
         </div>
