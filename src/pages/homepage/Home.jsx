@@ -35,9 +35,11 @@ useEffect(() => {
             <div className="w-screen h-screen grid place-items-center">
                 <div id="poke-image" className="w-[90%] h-[90%] bg-gray-700 rounded-md relative grid">
 
-                    <div className="w-full h-fit bg-white">teste</div>
+                    <div className="w-full h-fit absolute top-[4%] flex justify-end px-[5%]">
+                        <input type="search" name="search" id="search_pokemon" className="rounded-full px-3 py-[0.28rem] focus:outline-2 focus:outline outline-offset-0 outline-red-400"/>
+                    </div>
 
-                    <div id="pokemon_body" className="w-[90%] h-[95%] py-2 bg-gray-200 rounded-md place-self-center">
+                    <div id="pokemon_body" className="w-[90%] h-[85%] mt-[5%] py-2 bg-gray-200 rounded-md place-self-center">
                         <section className="h-[90%] w-full grid px-3 py-2 items-center justify-items-center grid-cols-7 relative">
                         {
                             arrayPokemons.map((infos) => {
@@ -50,7 +52,7 @@ useEffect(() => {
                         }
                         </section>
 
-                        <div className="flex justify-end px-9 items-center">
+                        <div className="flex justify-end px-9 items-center mt-[2%]">
                             {page === 0 ? <></> : <FaCaretLeft onClick={() => setPage(page - 1)} className="hover:cursor-pointer"/>} {page + 1} <FaCaretRight onClick={() => setPage(page + 1)} className="hover:cursor-pointer"/>
                         </div>
                     </div>
