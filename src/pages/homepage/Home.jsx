@@ -8,6 +8,7 @@ import { FaCaretLeft, FaCaretRight } from "react-icons/fa";
 export default function Homepage(){
 
     const [arrayPokemons, setArraysPokemon] = useState([])
+    const [openModal, setOpenModal] = useState(false)
     const [page, setPage] = useState(0)
     const pagination = page * 21
 useEffect(() => {

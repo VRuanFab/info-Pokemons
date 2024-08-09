@@ -1,11 +1,11 @@
 
+export default function Info(isOpenModal){
 
-export default function Info(){
-
+    if(isOpenModal)
     return(
         <>
             <div id="poke-image" className="w-[25rem] bg-red-400/90">
-                        test
+                test
             </div>
         </>
     )
