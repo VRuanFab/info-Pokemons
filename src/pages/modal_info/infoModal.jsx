@@ -35,14 +35,14 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
 
                 <section className="grid grid-cols-2 h-full w-full">
 
-                    <div id="poke-image" className="bg-red-400/90 grid place-items-center">
+                    <div id="poke-image" className="bg-red-400/90 grid justify-items-center">
 
-                        <div className="w-[60%] h-[70%] border-2 rounded-md">
-                            <img src={imgPrincipal} className="w-fit h-full p-10"/>
+                        <div className="w-[60%] h-[80%] grid justify-items-center self-center border-2">
+                            <img src={imgPrincipal} className="w-fit h-full p-10 border-2 rounded-md"/>
                             <h1 className="font-semibold text-lg capitalize">{pokeName}</h1>
                         </div>
 
-                        <div className="flex w-full h-[50%]">
+                        <div className="flex w-full h-[80%]">
                             <div className="w-[60%] h-full border-2">
                                 evo 1
                             </div>
