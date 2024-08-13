@@ -8,7 +8,6 @@ import { FaCaretLeft, FaCaretRight } from "react-icons/fa";
 export default function Homepage(){
 
     const [arrayPokemons, setArraysPokemon] = useState([])
-    const [openModal, setOpenModal] = useState(false)
     const [page, setPage] = useState(0)
     const pagination = page * 21
 useEffect(() => {
@@ -45,14 +44,13 @@ useEffect(() => {
                         {
                             arrayPokemons.map((infos) => {
                                 return(
-                                        <div key={infos.id} className="w-fit h-fit grid text-center hover:cursor-pointer hover:bg-gray-500/30 rounded-lg p-3">
+                                        <div key={infos.id} className="w-fit h-fit grid text-center">
                                             <Pokemon_blocks nome_pokemon={infos.name} img_pokemon={infos.img}/>
                                         </div>
                                     )
                             })
                         }
                         </section>
-
                         <div className="flex justify-end px-9 items-center mt-[2%]">
                             {page === 0 ? <></> : <FaCaretLeft onClick={() => setPage(page - 1)} className="hover:cursor-pointer"/>} {page + 1} <FaCaretRight onClick={() => setPage(page + 1)} className="hover:cursor-pointer"/>
                         </div>
