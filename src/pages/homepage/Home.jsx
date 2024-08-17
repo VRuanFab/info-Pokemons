@@ -52,7 +52,9 @@ useEffect(() => {
                         }
                         </section>
                         <div className="flex justify-end px-9 items-center mt-[2%]">
-                            {page === 0 ? <></> : <FaCaretLeft onClick={() => setPage(page - 1)} className="hover:cursor-pointer"/>} {page + 1} <FaCaretRight onClick={() => setPage(page + 1)} className="hover:cursor-pointer"/>
+                            {page === 0 ? <></> : <FaCaretLeft onClick={() => setPage(page - 1)} className="hover:cursor-pointer w-7 h-fit"/>} 
+                                <label className="text-lg"> {page + 1} </label> 
+                            <FaCaretRight onClick={() => setPage(page + 1)} className="hover:cursor-pointer w-7 h-fit"/>
                         </div>
                     </div>
 

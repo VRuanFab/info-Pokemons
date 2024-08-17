@@ -10,20 +10,18 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
         const pokemonInfo = async () => {
             await api.get(`/pokemon/${pokeName}`)
             .then(res => {
-                setInfo(res.data)
+                const objPoke = {
+                    id: res.data
+                }
+                
+                setInfo(objPoke)
+                console.log(info)
             })
             .catch(err => console.log(err))
         }
-
-        // const pokemonInfo = async () => {
-        //     const infoPromise = Array.from(api.get(`/pokemon/$pokeName`))
-
-        //     const result = 
-        // }
         pokemonInfo()
+        
     }, [isOpenModal])
-
-    console.log(info)
 
     if(isOpenModal)
     return(
@@ -37,8 +35,8 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
 
                     <div id="poke-image" className="bg-red-400/90 grid justify-items-center">
 
-                        <div className="w-[60%] h-[80%] grid justify-items-center self-center border-2">
-                            <img src={imgPrincipal} className="w-fit h-full p-10 border-2 rounded-md"/>
+                        <div className="h-[80%] grid place-content-center gap-6 self-center">
+                            <img src={imgPrincipal} className="w-fit h-60 p-6 border-2 rounded-md"/>
                             <h1 className="font-semibold text-lg capitalize">{pokeName}</h1>
                         </div>
 
