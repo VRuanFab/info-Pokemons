@@ -11,16 +11,27 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
             await api.get(`/pokemon/${pokeName}`)
             .then(res => {
                 const objPoke = {
-                    id: res.data
+                    id: res.data.id,
+                    name: res.data.name,
+                    whereFind: res.data.location_area_encounters,
+                    height: res.data.height,
+                    weight: res.data.weight,
+                    forms: res.data.forms,
+                    type: res.data.types,
+                    species: res.data.species.url
                 }
                 
                 setInfo(objPoke)
-                console.log(info)
+                console.log(info.id, res.data)
             })
             .catch(err => console.log(err))
         }
         pokemonInfo()
-        
+
+        // const pokeEvo = async () => {
+            
+        // }
+
     }, [isOpenModal])
 
     if(isOpenModal)
