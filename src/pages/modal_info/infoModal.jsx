@@ -22,12 +22,17 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
                 }
                 
                 setInfo(objPoke)
-                console.log(info.id, res.data)
             })
             .catch(err => console.log(err))
+
+            await api.get(`${info.species}`)
+            .then(res => {
+                console.log(res.data.varieties)
+                // info.species = res.data.varieties
+            })
         }
         pokemonInfo()
-
+        console.log(info)
         // const pokeEvo = async () => {
             
         // }
