@@ -1,4 +1,3 @@
-
 import api from "../../api/api"
 import { useState, useEffect } from "react"
 
@@ -7,36 +6,41 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
     const [info, setInfo] = useState([])
     
     useEffect(() => {
-        const pokemonInfo = async () => {
-            await api.get(`/pokemon/${pokeName}`)
-            .then(res => {
-                const objPoke = {
-                    id: res.data.id,
-                    name: res.data.name,
-                    whereFind: res.data.location_area_encounters,
-                    height: res.data.height,
-                    weight: res.data.weight,
-                    forms: res.data.forms,
-                    type: res.data.types,
-                    species: res.data.species.url
-                }
+        if (isOpenModal){
+            const pokemonInfo = async () => {
+                await api.get(`/pokemon/${pokeName}`)
+                .then(res => {
+                    const objPoke = {
+                        id: res.data.id,
+                        name: res.data.name,
+                        whereFind: res.data.location_area_encounters,
+                        height: res.data.height,
+                        weight: res.data.weight,
+                        forms: res.data.forms,
+                        type: res.data.types,
+                        species: res.data.species.url
+                    }
+                    
+                    setInfo(objPoke)
+                })
+                .catch(err => console.log(err))
                 
-                setInfo(objPoke)
-            })
-            .catch(err => console.log(err))
+    
+                const evoPokemon = async () => {
+                    await api.get(`${info.species}`)
+                    .then((res) => {
+                        console.log(
+                            res.data
+                            // evolution: res.data.evolution_chain.url
+                        )
+                    })
+                    .catch(err => {console.log(`erro na api: ${err}`)})
+                }
+                evoPokemon()
+            }
 
-            await api.get(`${info.species}`)
-            .then(res => {
-                console.log(res.data.varieties)
-                // info.species = res.data.varieties
-            })
+            pokemonInfo()
         }
-        pokemonInfo()
-        console.log(info)
-        // const pokeEvo = async () => {
-            
-        // }
-
     }, [isOpenModal])
 
     if(isOpenModal)
