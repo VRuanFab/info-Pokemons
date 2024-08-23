@@ -22,25 +22,49 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
                         species: res.data.species.url
                     }
                     
-                    setInfo(objPoke)
+                    // setInfo(objPoke)
+
+                    const evoPokemon = async () => {
+                        await api.get(`${res.data.species.url}`)
+                        .then((evolution) => {
+
+                            const nextEvolutionCall = async () => {
+                                await api.get(`${evolution.data.evolution_chain.url}`)
+                                .then(nextEvo => {
+
+                                    objPoke.firstForm = nextEvo.data.chain.species.name
+                                    const evolutionLine = nextEvo.data.chain.evolves_to
+
+                                    
+                                    // console.log(evolutionLine)
+                                    
+                                })
+                                .catch(err => console.log(err))
+                            }
+
+                            nextEvolutionCall()
+                        })
+                        .catch(err => {console.log(`erro na api: ${err}`)})
+                    }
+                    evoPokemon()
                 })
                 .catch(err => console.log(err))
                 
     
-                const evoPokemon = async () => {
-                    await api.get(`${info.species}`)
-                    .then((res) => {
-                        console.log(
-                            res.data
-                            // evolution: res.data.evolution_chain.url
-                        )
-                    })
-                    .catch(err => {console.log(`erro na api: ${err}`)})
-                }
-                evoPokemon()
             }
-
             pokemonInfo()
+            
+            // const evoPokemon = async () => {
+            //     await api.get(`${info.species}`)
+            //     .then((res) => {
+            //         console.log(
+            //             res.data
+            //             // evolution: res.data.evolution_chain.url
+            //         )
+            //     })
+            //     .catch(err => {console.log(`erro na api: ${err}`)})
+            // }
+            // evoPokemon()
         }
     }, [isOpenModal])
 
