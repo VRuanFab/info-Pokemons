@@ -1,4 +1,3 @@
-
 import api from "../../api/api"
 import { useState, useEffect } from "react"
 
@@ -8,54 +7,40 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
     const [evolution, setEvolution] = useState([])
     
     useEffect(() => {
-        const pokemonInfo = async () => {
-            await api.get(`/pokemon/${pokeName}`)
-            .then(res => {
-                const objPoke = {
-                    id: res.data.id,
-                    name: res.data.name,
-                    whereFind: res.data.location_area_encounters,
-                    height: res.data.height,
-                    weight: res.data.weight,
-                    forms: res.data.forms,
-                    type: res.data.types,
-                    species: res.data.species.url
-                }
-                
-                setInfo(objPoke)
-            })
-            .catch(err => console.log(err))
-        }
-        pokemonInfo()
-        console.log(info)
-        // const pokeEvo = async () => {
-            
         if (isOpenModal){
-            const teste = async () => {
-                const species = await api.get(`${info.species}`)
+            const pokemonInfo = async () => {
+                await api.get(`/pokemon/${pokeName}`)
                 .then(res => {
-                        const specie_evolution = {
-                            nextEvolution: res.data.evolution_chain,
-                            beforeEvolution: res.data.evolves_from_species.name
-                        }
-                        return specie_evolution
-                        // info.species = res.data.varieties
+                    const objPoke = {
+                        id: res.data.id,
+                        name: res.data.name,
+                        whereFind: res.data.location_area_encounters,
+                        height: res.data.height,
+                        weight: res.data.weight,
+                        forms: res.data.forms,
+                        type: res.data.types,
+                        species: res.data.species.url
+                    }
+                    
+                    setInfo(objPoke)
+                })
+                .catch(err => console.log(err))
+                
+    
+                const evoPokemon = async () => {
+                    await api.get(`${info.species}`)
+                    .then((res) => {
+                        console.log(
+                            res.data
+                            // evolution: res.data.evolution_chain.url
+                        )
                     })
-                return species
-            }
-            teste()
-            .then(url_evolution => {
-                const getEvolution = async () => {
-                    await api.get(`${url_evolution.nextEvolution.url}`)
-                    .then(res => {
-                        const evo_chain = {
-                            name_evo1: res.data.chain.evolves_to.species.name
-                        }
-                    })
+                    .catch(err => {console.log(`erro na api: ${err}`)})
                 }
-                getEvolution()
-            })
-            
+                evoPokemon()
+            }
+
+            pokemonInfo()
         }
     }, [isOpenModal])
 
