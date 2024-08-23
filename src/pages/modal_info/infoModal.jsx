@@ -5,6 +5,7 @@ import { useState, useEffect } from "react"
 export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
 
     const [info, setInfo] = useState([])
+    const [evolution, setEvolution] = useState([])
     
     useEffect(() => {
         const pokemonInfo = async () => {
@@ -24,18 +25,38 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
                 setInfo(objPoke)
             })
             .catch(err => console.log(err))
-
-            await api.get(`${info.species}`)
-            .then(res => {
-                console.log(res.data.varieties)
-                // info.species = res.data.varieties
-            })
         }
         pokemonInfo()
         console.log(info)
         // const pokeEvo = async () => {
             
-
+        if (isOpenModal){
+            const teste = async () => {
+                const species = await api.get(`${info.species}`)
+                .then(res => {
+                        const specie_evolution = {
+                            nextEvolution: res.data.evolution_chain,
+                            beforeEvolution: res.data.evolves_from_species.name
+                        }
+                        return specie_evolution
+                        // info.species = res.data.varieties
+                    })
+                return species
+            }
+            teste()
+            .then(url_evolution => {
+                const getEvolution = async () => {
+                    await api.get(`${url_evolution.nextEvolution.url}`)
+                    .then(res => {
+                        const evo_chain = {
+                            name_evo1: res.data.chain.evolves_to.species.name
+                        }
+                    })
+                }
+                getEvolution()
+            })
+            
+        }
     }, [isOpenModal])
 
     if(isOpenModal)
