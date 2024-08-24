@@ -22,22 +22,34 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
                         species: res.data.species.url
                     }
                     
-                    // setInfo(objPoke)
-
+                    
                     const evoPokemon = async () => {
                         await api.get(`${res.data.species.url}`)
                         .then((evolution) => {
 
                             const nextEvolutionCall = async () => {
+
                                 await api.get(`${evolution.data.evolution_chain.url}`)
                                 .then(nextEvo => {
-
-                                    objPoke.firstForm = nextEvo.data.chain.species.name
-                                    const evolutionLine = nextEvo.data.chain.evolves_to
-
                                     
-                                    // console.log(evolutionLine)
+                                    if(nextEvo.data.chain.species.name != objPoke.name){
+                                        objPoke.firstForm = nextEvo.data.chain.species.name
+                                    }
+
+                                    const arrEvo = []
+                                    const evolutionLine = nextEvo.data.chain.evolves_to[0]
+                                    const continueEvo = evolutionLine.evolves_to
                                     
+                                    arrEvo.push(evolutionLine.species.name)
+                                    if(continueEvo.length > 0){
+                                        arrEvo.push(continueEvo[0].species.name)
+                                    }
+                                    
+                                    objPoke.nextForm = arrEvo
+                                    setInfo(objPoke)
+                                    
+                                    arrEvo.push(objPoke.firstForm)
+                                    setEvolution(arrEvo)
                                 })
                                 .catch(err => console.log(err))
                             }
@@ -49,22 +61,8 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
                     evoPokemon()
                 })
                 .catch(err => console.log(err))
-                
-    
             }
             pokemonInfo()
-            
-            // const evoPokemon = async () => {
-            //     await api.get(`${info.species}`)
-            //     .then((res) => {
-            //         console.log(
-            //             res.data
-            //             // evolution: res.data.evolution_chain.url
-            //         )
-            //     })
-            //     .catch(err => {console.log(`erro na api: ${err}`)})
-            // }
-            // evoPokemon()
         }
     }, [isOpenModal])
 
@@ -86,8 +84,22 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
                         </div>
 
                         <div className="flex w-full h-[80%]">
-                            <div className="w-[60%] h-full border-2">
+                            {
+                            evolution.map((item, index) => {
+
+                                console.log(item)
+
+                                    return (
+                                        <div className="w-[60%] h-full border-2" key={index}>
+                                            {item}
+                                        </div>
+                                    )
+                            })
+                            }
+                            
+                            {/* <div className="w-[60%] h-full border-2">
                                 evo 1
+                                {console.log(info)}
                             </div>
                         
                             <div className="w-[60%] h-full border-2">
@@ -96,7 +108,7 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
                         
                             <div className="w-[60%] h-full border-2">
                                 evo 3
-                            </div>
+                            </div> */}
                         </div>
 
                     </div>
