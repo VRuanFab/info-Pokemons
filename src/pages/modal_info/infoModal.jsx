@@ -33,11 +33,13 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
                                 .then(nextEvo => {
 
                                     objPoke.firstForm = nextEvo.data.chain.species.name
-                                    const evolutionLine = nextEvo.data.chain.evolves_to
+                                    const evolutionLine = nextEvo.data.chain.evolves_to[0]
 
-                                    
-                                    // console.log(evolutionLine)
-                                    
+                                    if (evolutionLine.evolves_to[0].evolves_to.length != 0){
+                                        console.log('evolui')
+                                    }
+                                    // console.log(evolutionLine.evolves_to[0].evolves_to.length)
+                                    console.log(evolutionLine)
                                 })
                                 .catch(err => console.log(err))
                             }
