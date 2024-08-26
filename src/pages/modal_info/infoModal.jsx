@@ -91,7 +91,9 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
         <div className="fixed top-0 left-0 right-0 bottom-0 z-50 bg-gray-700/40 w-screen h-screen">
             
             <div className="bg-slate-300 w-[80%] h-[80%] fixed top-[10%] left-[10%] rounded-lg">
-                    <div onClick={closeModal} className="border-2 border-black w-full h-fit">X</div>
+                    <div onClick={closeModal} className="w-full h-fit text-end px-3">
+                        X
+                    </div>
 
                 <section className="grid grid-cols-2 h-full w-full">
 
