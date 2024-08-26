@@ -8,8 +8,8 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
     
     useEffect(() => {
         if (isOpenModal){
-            const pokemonInfo = async () => {
-                await api.get(`/pokemon/${pokeName}`)
+            const pokemonInfo = async (nome) => {
+                await api.get(`/pokemon/${nome}`)
                 .then(res => {
                     const objPoke = {
                         id: res.data.id,
@@ -22,7 +22,6 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
                         species: res.data.species.url
                     }
                     
-                    
                     const evoPokemon = async () => {
                         await api.get(`${res.data.species.url}`)
                         .then((evolution) => {
@@ -31,10 +30,7 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
 
                                 await api.get(`${evolution.data.evolution_chain.url}`)
                                 .then(nextEvo => {
-                                    
-                                    if(nextEvo.data.chain.species.name != objPoke.name){
-                                        objPoke.firstForm = nextEvo.data.chain.species.name
-                                    }
+                                    objPoke.firstForm = nextEvo.data.chain.species.name
 
                                     const arrEvo = []
                                     const evolutionLine = nextEvo.data.chain.evolves_to[0]
@@ -49,7 +45,27 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
                                     setInfo(objPoke)
                                     
                                     arrEvo.push(objPoke.firstForm)
-                                    setEvolution(arrEvo)
+                                    
+                                    const pokemonEvoInfo = async () => {
+                                        let arrInfoEvo = []
+
+                                        arrEvo.map(item => {
+                                            arrInfoEvo.push(api.get(`/pokemon/${item}`))
+                                        })
+                                        const resultInfo = await Promise.all(arrInfoEvo)
+
+                                        let arrResponse = []
+                                        resultInfo.map(item => {
+                                            const objPoke = {
+                                                        id: item.data.id,
+                                                        name: item.data.name,
+                                                        img: item.data.sprites.front_default
+                                                    }
+                                                    arrResponse.push(objPoke)
+                                        })
+                                        setEvolution(arrResponse)
+                                    }
+                                    pokemonEvoInfo()
                                 })
                                 .catch(err => console.log(err))
                             }
@@ -62,7 +78,10 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
                 })
                 .catch(err => console.log(err))
             }
-            pokemonInfo()
+            pokemonInfo(pokeName)
+            .catch((err) => {
+                console.log(err)
+            })
         }
     }, [isOpenModal])
 
@@ -83,32 +102,17 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
                             <h1 className="font-semibold text-lg capitalize">{pokeName}</h1>
                         </div>
 
-                        <div className="flex w-full h-[80%]">
+                        <div className="flex w-full h-[60%]">
                             {
-                            evolution.map((item, index) => {
-
-                                console.log(item)
-
+                                evolution.map((item, index) => {
                                     return (
-                                        <div className="w-[60%] h-full border-2" key={index}>
-                                            {item}
+                                        <div className={`w-[50%] h-full grid ${evolution.length - 1 === index ? '':'border-r-2'} content-center`} key={index}>
+                                            <label className="capitalize font-semibold tracking-wide">{item.name}</label>
+                                            <img src={item.img} alt="" className="w-[60%] h-fit place-self-center"/>
                                         </div>
-                                    )
-                            })
+                                        )
+                                })
                             }
-                            
-                            {/* <div className="w-[60%] h-full border-2">
-                                evo 1
-                                {console.log(info)}
-                            </div>
-                        
-                            <div className="w-[60%] h-full border-2">
-                                evo 2
-                            </div>
-                        
-                            <div className="w-[60%] h-full border-2">
-                                evo 3
-                            </div> */}
                         </div>
 
                     </div>
