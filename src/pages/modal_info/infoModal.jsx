@@ -8,8 +8,8 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
     
     useEffect(() => {
         if (isOpenModal){
-            const pokemonInfo = async () => {
-                await api.get(`/pokemon/${pokeName}`)
+            const pokemonInfo = async (nome) => {
+                await api.get(`/pokemon/${nome}`)
                 .then(res => {
                     const objPoke = {
                         id: res.data.id,
@@ -22,24 +22,50 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
                         species: res.data.species.url
                     }
                     
-                    // setInfo(objPoke)
-
                     const evoPokemon = async () => {
                         await api.get(`${res.data.species.url}`)
                         .then((evolution) => {
 
                             const nextEvolutionCall = async () => {
+
                                 await api.get(`${evolution.data.evolution_chain.url}`)
                                 .then(nextEvo => {
-
                                     objPoke.firstForm = nextEvo.data.chain.species.name
-                                    const evolutionLine = nextEvo.data.chain.evolves_to[0]
 
-                                    if (evolutionLine.evolves_to[0].evolves_to.length != 0){
-                                        console.log('evolui')
+                                    const arrEvo = []
+                                    const evolutionLine = nextEvo.data.chain.evolves_to[0]
+                                    const continueEvo = evolutionLine.evolves_to
+                                    
+                                    arrEvo.push(evolutionLine.species.name)
+                                    if(continueEvo.length > 0){
+                                        arrEvo.push(continueEvo[0].species.name)
                                     }
-                                    // console.log(evolutionLine.evolves_to[0].evolves_to.length)
-                                    console.log(evolutionLine)
+                                    
+                                    objPoke.nextForm = arrEvo
+                                    setInfo(objPoke)
+                                    
+                                    arrEvo.push(objPoke.firstForm)
+                                    
+                                    const pokemonEvoInfo = async () => {
+                                        let arrInfoEvo = []
+
+                                        arrEvo.map(item => {
+                                            arrInfoEvo.push(api.get(`/pokemon/${item}`))
+                                        })
+                                        const resultInfo = await Promise.all(arrInfoEvo)
+
+                                        let arrResponse = []
+                                        resultInfo.map(item => {
+                                            const objPoke = {
+                                                        id: item.data.id,
+                                                        name: item.data.name,
+                                                        img: item.data.sprites.front_default
+                                                    }
+                                                    arrResponse.push(objPoke)
+                                        })
+                                        setEvolution(arrResponse)
+                                    }
+                                    pokemonEvoInfo()
                                 })
                                 .catch(err => console.log(err))
                             }
@@ -51,22 +77,11 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
                     evoPokemon()
                 })
                 .catch(err => console.log(err))
-                
-    
             }
-            pokemonInfo()
-            
-            // const evoPokemon = async () => {
-            //     await api.get(`${info.species}`)
-            //     .then((res) => {
-            //         console.log(
-            //             res.data
-            //             // evolution: res.data.evolution_chain.url
-            //         )
-            //     })
-            //     .catch(err => {console.log(`erro na api: ${err}`)})
-            // }
-            // evoPokemon()
+            pokemonInfo(pokeName)
+            .catch((err) => {
+                console.log(err)
+            })
         }
     }, [isOpenModal])
 
@@ -87,18 +102,17 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
                             <h1 className="font-semibold text-lg capitalize">{pokeName}</h1>
                         </div>
 
-                        <div className="flex w-full h-[80%]">
-                            <div className="w-[60%] h-full border-2">
-                                evo 1
-                            </div>
-                        
-                            <div className="w-[60%] h-full border-2">
-                                evo 2
-                            </div>
-                        
-                            <div className="w-[60%] h-full border-2">
-                                evo 3
-                            </div>
+                        <div className="flex w-full h-[60%]">
+                            {
+                                evolution.map((item, index) => {
+                                    return (
+                                        <div className={`w-[50%] h-full grid ${evolution.length - 1 === index ? '':'border-r-2'} content-center`} key={index}>
+                                            <label className="capitalize font-semibold tracking-wide">{item.name}</label>
+                                            <img src={item.img} alt="" className="w-[60%] h-fit place-self-center"/>
+                                        </div>
+                                        )
+                                })
+                            }
                         </div>
 
                     </div>
