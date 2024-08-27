@@ -1,9 +1,12 @@
 import { useState, useEffect } from "react"
 import api from "../../api/api"
 import Pokemon_blocks from "../../assets/pokemons_blocks"
-
-
 import { FaCaretLeft, FaCaretRight } from "react-icons/fa";
+import pokeball_wallpaper2 from "../../assets/pokeball_wallpaper2.jpg"
+import pokeball_wallpaper3 from "../../assets/pokeball_wallpaper3.png"
+import pokeball_wallpaper4 from "../../assets/pokeball_wallpaper4.jpg"
+import pokeball_wallpaper5 from "../../assets/pokeball_wallpaper5.jpg"
+import pokeball_wallpaper_dark from "../../assets/pokeball_wallpaper_dark.jpg"
 
 export default function Homepage(){
 
@@ -31,7 +34,7 @@ useEffect(() => {
 
     return (
         <>
-        <div className="w-screen h-screen grid justify-center content-center">
+        <div className={`w-screen h-screen grid justify-center content-center`} style={{backgroundImage: `url(${pokeball_wallpaper2})`}}>
             <div className="w-screen h-screen grid place-items-center">
                 <div id="poke-image" className="w-[90%] h-[90%] bg-gray-700 rounded-md relative grid">
 

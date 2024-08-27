@@ -1,5 +1,6 @@
 import api from "../../api/api"
 import { useState, useEffect } from "react"
+import { IoMdClose } from "react-icons/io";
 
 export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
 
@@ -90,17 +91,17 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
         <>
         <div className="fixed top-0 left-0 right-0 bottom-0 z-50 bg-gray-700/40 w-screen h-screen">
             
-            <div className="bg-slate-300 w-[80%] h-[80%] fixed top-[10%] left-[10%] rounded-lg">
-                    <div onClick={closeModal} className="w-full h-fit text-end px-3">
-                        X
+            <div className="bg-red-400 w-[80%] h-[80%] fixed top-[10%] left-[10%] rounded-lg">
+                    <div onClick={closeModal} className="w-full h-fit relative">
+                        <IoMdClose className="absolute right-3 top-2 hover:cursor-pointer w-6 h-fit"/>
                     </div>
 
-                <section className="grid grid-cols-2 h-full w-full">
+                <section className="grid grid-cols-2 h-full w-full mt-2">
 
-                    <div id="poke-image" className="bg-red-400/90 grid justify-items-center">
+                    <div id="poke-image" className="grid justify-items-center">
 
-                        <div className="h-[80%] grid place-content-center gap-6 self-center">
-                            <img src={imgPrincipal} className="w-fit h-60 p-6 border-2 rounded-md"/>
+                        <div className="h-[80%] grid place-content-center justify-center gap-6 self-center">
+                            <img src={imgPrincipal} className="w-fit h-60 p-5 border-2 rounded-md"/>
                             <h1 className="font-semibold text-lg capitalize">{pokeName}</h1>
                         </div>
 
@@ -119,7 +120,7 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
 
                     </div>
 
-                    <div id="poke-image" className="bg-red-400/90 grid p-10 gap-4">
+                    <div id="poke-image" className="grid p-10 gap-4">
 
                         <div className="border-2">
                             desc
