@@ -8,7 +8,7 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
     const [evolution, setEvolution] = useState([])
     
     useEffect(() => {
-        if (isOpenModal){
+        if (isOpenModal  === true){
             const pokemonInfo = async (nome) => {
                 await api.get(`/pokemon/${nome}`)
                 .then(res => {
@@ -124,6 +124,15 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
 
                         <div className="border-2">
                             desc
+                            {/* Tipo: {info.type[0].type.name} */}
+                            {/* Tipo: {info.type[0].type.name} */}
+
+                            {
+                            // info.type[0].type.name
+                            /* {info.type[0].type.name} */
+                            }
+                            
+                            {/* {console.log(info)} */}
                         </div>
 
                         <div className="border-2">

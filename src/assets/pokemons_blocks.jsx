@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 
 
 export default function Pokemon_blocks(props){
-    const [openModal, setOpenModal] = useState(false)
+    const [openModal, setOpenModal] = useState()
     
     return (
         <>
