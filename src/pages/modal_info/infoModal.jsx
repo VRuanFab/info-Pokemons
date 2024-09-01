@@ -4,7 +4,7 @@ import { IoMdClose } from "react-icons/io";
 
 export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
 
-    const [info, setInfo] = useState([])
+    const [info, setInfo] = useState({})
     const [evolution, setEvolution] = useState([])
     
     useEffect(() => {
@@ -28,56 +28,62 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
                         .then((evolution) => {
 
                             const nextEvolutionCall = async () => {
-
                                 await api.get(`${evolution.data.evolution_chain.url}`)
                                 .then(nextEvo => {
                                     objPoke.firstForm = nextEvo.data.chain.species.name
-
+                                    
                                     const arrEvo = []
-                                    const evolutionLine = nextEvo.data.chain.evolves_to[0]
-                                    const continueEvo = evolutionLine.evolves_to
-                                    
-                                    arrEvo.push(evolutionLine.species.name)
-                                    if(continueEvo.length > 0){
-                                        arrEvo.push(continueEvo[0].species.name)
-                                    }
-                                    
-                                    objPoke.nextForm = arrEvo
-                                    setInfo(objPoke)
-                                    
-                                    arrEvo.push(objPoke.firstForm)
-                                    
-                                    const pokemonEvoInfo = async () => {
-                                        let arrInfoEvo = []
 
-                                        arrEvo.map(item => {
-                                            arrInfoEvo.push(api.get(`/pokemon/${item}`))
-                                        })
-                                        const resultInfo = await Promise.all(arrInfoEvo)
+                                    if (nextEvo.data.chain.evolves_to.length > 0){
 
-                                        let arrResponse = []
-                                        resultInfo.map(item => {
-                                            const objPoke = {
-                                                        id: item.data.id,
-                                                        name: item.data.name,
-                                                        img: item.data.sprites.front_default
-                                                    }
-                                                    arrResponse.push(objPoke)
-                                        })
-                                        setEvolution(arrResponse)
+                                        const evolutionLine = nextEvo.data.chain.evolves_to[0]
+                                        const continueEvo = evolutionLine.evolves_to
+
+                                        arrEvo.push(evolutionLine.species.name)
+
+                                        
+                                        if(continueEvo.length > 0){
+                                            arrEvo.push(continueEvo[0].species.name)
+                                        }
+                                        objPoke.nextForm = arrEvo
+                                        setInfo(objPoke)
+                                        
+                                        arrEvo.push(objPoke.firstForm)
+
+                                            const pokemonEvoInfo = async () => {
+                                                let arrInfoEvo = []
+        
+                                                arrEvo.map(item => {
+                                                    arrInfoEvo.push(api.get(`/pokemon/${item}`))
+                                                })
+                                                const resultInfo = await Promise.all(arrInfoEvo)
+        
+                                                let arrResponse = []
+                                                resultInfo.map(item => {
+                                                    const objPoke = {
+                                                                id: item.data.id,
+                                                                name: item.data.name,
+                                                                img: item.data.sprites.front_default
+                                                            }
+                                                            arrResponse.push(objPoke)
+                                                })
+                                                setEvolution(arrResponse)
+                                            }
+                                            pokemonEvoInfo()
                                     }
-                                    pokemonEvoInfo()
+                                    else {
+                                        setInfo(objPoke)
+                                    }
                                 })
-                                .catch(err => console.log(err))
+                                .catch(err => console.log(`Erro na busca de evolução: ${err}`))
                             }
-
                             nextEvolutionCall()
                         })
-                        .catch(err => {console.log(`erro na api: ${err}`)})
+                        .catch(err => {console.log(`Erro na busca de evolução: ${err}`)})
                     }
                     evoPokemon()
                 })
-                .catch(err => console.log(err))
+                .catch(err => console.log(`Erro na busca de informações gerais: ${err}`))
             }
             pokemonInfo(pokeName)
             .catch((err) => {
@@ -85,6 +91,86 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
             })
         }
     }, [isOpenModal])
+
+
+    // deixa essa função escondida, ela só serve pra colorir o fundo do tipo de pokemon
+    function coloring_types(type){
+        let coloring = ''
+        switch (type){
+            case 'fire':
+                coloring = 'bg-[#f04816]'
+                break;
+
+            case 'bug':
+                coloring = 'bg-[#3f8a3b]'
+                break;
+
+            case 'poison':
+                coloring = 'bg-[#a946fa]'
+                break;
+
+            case 'psychic':
+                coloring = 'bg-[#fa57b9]'
+                break;
+            
+            case 'dark':
+                coloring = 'bg-[#383838]'
+                break;
+
+            case 'water':
+                coloring = 'bg-[#2e77ff]'
+                break;
+
+            case 'grass':
+                coloring = 'bg-[#30ba45]'
+                break;
+
+            case 'dragon':
+                coloring = 'bg-[#426bff]'
+                break;
+
+            case 'electric':
+                coloring = 'bg-[#f2c246]'
+                break;
+
+            case 'fairy':
+                coloring = 'bg-[#ff87f3]'
+                break;
+
+            case 'fighting':
+                coloring = 'bg-[#ba5f3c]'
+                break;
+
+            case 'flying':
+                coloring = 'bg-[#37506b]'
+                break;
+            
+            case 'ghost':
+                coloring = 'bg-[#655080]'
+                break;
+
+            case 'ground':
+                coloring = 'bg-[#c7985b]'
+                break;
+
+            case 'ice':
+                coloring = 'bg-[#83fafc]'
+                break;
+
+            case 'normal':
+                coloring = 'bg-[#c7d0d6]'
+                break;
+
+            case 'steel':
+                coloring = 'bg-[#86949e]'
+                break;
+
+            case 'rock':
+                coloring = 'bg-[#947d5f]'
+                break;
+            }
+        return coloring
+    }
 
     if(isOpenModal)
     return(
@@ -107,6 +193,7 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
 
                         <div className="flex w-full h-[60%]">
                             {
+                                evolution.length > 0?
                                 evolution.map((item, index) => {
                                     return (
                                         <div className={`w-[50%] h-full grid ${evolution.length - 1 === index ? '':'border-r-2'} content-center`} key={index}>
@@ -114,7 +201,8 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
                                             <img src={item.img} alt="" className="w-[60%] h-fit place-self-center"/>
                                         </div>
                                         )
-                                })
+                                }):
+                                (<></>)
                             }
                         </div>
 
@@ -123,16 +211,21 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
                     <div id="poke-image" className="grid p-10 gap-4">
 
                         <div className="border-2">
-                            desc
-                            {/* Tipo: {info.type[0].type.name} */}
-                            {/* Tipo: {info.type[0].type.name} */}
-
-                            {
-                            // info.type[0].type.name
-                            /* {info.type[0].type.name} */
-                            }
+                            {info.type != undefined? (<div className="capitalize">
+                                                        <h2 className="font-semibold">Tipo</h2> 
+                                                        <div className="flex gap-5">
+                                                            {
+                                                                info.type.map((item, i) => {
+                                                                    return (
+                                                                            <p key={i} className={`${coloring_types(item.type.name)}`}>
+                                                                                {item.type.name}
+                                                                            </p>
+                                                                        )
+                                                                })
+                                                            }
+                                                        </div>
+                                                    </div>):(null)}
                             
-                            {/* {console.log(info)} */}
                         </div>
 
                         <div className="border-2">
