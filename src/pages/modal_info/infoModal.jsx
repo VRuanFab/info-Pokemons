@@ -12,6 +12,7 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
             const pokemonInfo = async (nome) => {
                 await api.get(`/pokemon/${nome}`)
                 .then(res => {
+                    console.log(res)
                     const objPoke = {
                         id: res.data.id,
                         name: res.data.name,
@@ -20,7 +21,8 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
                         weight: res.data.weight,
                         forms: res.data.forms,
                         type: res.data.types,
-                        species: res.data.species.url
+                        species: res.data.species.url,
+                        status_base: res.data.stats
                     }
                     
                     const evoPokemon = async () => {
@@ -211,13 +213,17 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
                     <div id="poke-image" className="grid p-10 gap-4">
 
                         <div className="border-2">
-                            {info.type != undefined? (<div className="capitalize">
+                            Tamanho: {info.height/10} M
+                            Peso: {info.weight/10} Kg
+
+                            {console.log(info.status_base)}
+                            {info.type != undefined? (<div className="capitalize grid w-fit border-2">
                                                         <h2 className="font-semibold">Tipo</h2> 
                                                         <div className="flex gap-5">
                                                             {
                                                                 info.type.map((item, i) => {
                                                                     return (
-                                                                            <p key={i} className={`${coloring_types(item.type.name)}`}>
+                                                                            <p key={i} className={`${coloring_types(item.type.name)} px-4 py-[0.31rem] rounded-md outline outline-2 outline-offset-[-5px] outline-white -skew-x-6 font-medium`}>
                                                                                 {item.type.name}
                                                                             </p>
                                                                         )
