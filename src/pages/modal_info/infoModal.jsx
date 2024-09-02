@@ -12,7 +12,6 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
             const pokemonInfo = async (nome) => {
                 await api.get(`/pokemon/${nome}`)
                 .then(res => {
-                    console.log(res)
                     const objPoke = {
                         id: res.data.id,
                         name: res.data.name,
@@ -24,6 +23,17 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
                         species: res.data.species.url,
                         status_base: res.data.stats
                     }
+
+                    const characteristics = async (id) => {
+                        await api.get(`/characteristic/${id}/`)
+                        .then(res => {
+                            console.log(res)
+                        })
+                        .catch(err => {
+                            console.log('Não foi possivel carregar as caracteristicas: ' + err)
+                        })
+                    }
+                    characteristics(info.id)
                     
                     const evoPokemon = async () => {
                         await api.get(`${res.data.species.url}`)
@@ -68,6 +78,7 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
                                                                 img: item.data.sprites.front_default
                                                             }
                                                             arrResponse.push(objPoke)
+                                                            arrResponse = arrResponse.sort((a, b) => a.id - b.id)
                                                 })
                                                 setEvolution(arrResponse)
                                             }
@@ -87,10 +98,12 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
                 })
                 .catch(err => console.log(`Erro na busca de informações gerais: ${err}`))
             }
+
             pokemonInfo(pokeName)
             .catch((err) => {
                 console.log(err)
             })
+
         }
     }, [isOpenModal])
 
@@ -179,7 +192,7 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
         <>
         <div className="fixed top-0 left-0 right-0 bottom-0 z-50 bg-gray-700/40 w-screen h-screen">
             
-            <div className="bg-red-400 w-[80%] h-[80%] fixed top-[10%] left-[10%] rounded-lg">
+            <div className="bg-[#b3b3b3] w-[80%] h-[80%] fixed top-[10%] left-[10%] rounded-lg">
                     <div onClick={closeModal} className="w-full h-fit relative">
                         <IoMdClose className="absolute right-3 top-2 hover:cursor-pointer w-6 h-fit"/>
                     </div>
@@ -189,53 +202,62 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
                     <div id="poke-image" className="grid justify-items-center">
 
                         <div className="h-[80%] grid place-content-center justify-center gap-6 self-center">
-                            <img src={imgPrincipal} className="w-fit h-60 p-5 border-2 rounded-md"/>
+                            <img src={imgPrincipal} className="w-fit h-60 p-4 border-2 rounded-md bg-slate-200 shadow-xl drop-shadow-lg"/>
                             <h1 className="font-semibold text-lg capitalize">{pokeName}</h1>
                         </div>
 
-                        <div className="flex w-full h-[60%]">
-                            {
-                                evolution.length > 0?
-                                evolution.map((item, index) => {
-                                    return (
-                                        <div className={`w-[50%] h-full grid ${evolution.length - 1 === index ? '':'border-r-2'} content-center`} key={index}>
-                                            <label className="capitalize font-semibold tracking-wide">{item.name}</label>
-                                            <img src={item.img} alt="" className="w-[60%] h-fit place-self-center"/>
-                                        </div>
-                                        )
-                                }):
-                                (<></>)
-                            }
+                        <div className="w-full">
+                            <h1 className="mb-4 font-medium underline underline-offset-4 decoration-white decoration-[2px] decoration-solid">Linha Evolutiva</h1>
+                            <div className="flex w-full h-[60%]">
+
+                                {
+                                    evolution.length > 0?
+                                    evolution.map((item, index) => {
+                                        return (
+                                            <div className={`w-[50%] h-full grid ${evolution.length - 1 === index ? '':'border-r-2'} content-center`} key={index}>
+                                                <label className="capitalize font-semibold tracking-wide">{item.name}</label>
+                                                <img src={item.img} alt="" className="w-[60%] h-fit place-self-center"/>
+                                            </div>
+                                            )
+                                    }):
+                                    (<></>)
+                                }
+                            </div>
                         </div>
 
                     </div>
-
                     <div id="poke-image" className="grid p-10 gap-4">
 
-                        <div className="border-2">
-                            Tamanho: {info.height/10} M
+                        <div className="border-2 text-left rounded-md p-3">
+                            <p>Tamanho: {info.height/10} M</p>
+
                             Peso: {info.weight/10} Kg
 
-                            {console.log(info.status_base)}
-                            {info.type != undefined? (<div className="capitalize grid w-fit border-2">
-                                                        <h2 className="font-semibold">Tipo</h2> 
-                                                        <div className="flex gap-5">
-                                                            {
-                                                                info.type.map((item, i) => {
-                                                                    return (
-                                                                            <p key={i} className={`${coloring_types(item.type.name)} px-4 py-[0.31rem] rounded-md outline outline-2 outline-offset-[-5px] outline-white -skew-x-6 font-medium`}>
-                                                                                {item.type.name}
-                                                                            </p>
-                                                                        )
-                                                                })
-                                                            }
-                                                        </div>
-                                                    </div>):(null)}
+                            
                             
                         </div>
 
-                        <div className="border-2">
-                            desc
+                        <div className="border-2 rounded-md p-3">
+                            
+                            {info.type != undefined? (
+                                                        <div className="capitalize grid w-fit gap-y-3">
+                                                            <h2 className="font-semibold">Tipo</h2> 
+                                                            <div className="flex gap-5">
+                                                                {
+                                                                    info.type.map((item, i) => {
+                                                                        return (
+                                                                                <p key={i} className={`${coloring_types(item.type.name)} px-4 py-[0.31rem] rounded-md outline outline-2 outline-offset-[-5px] outline-white -skew-x-6 font-medium`}>
+                                                                                    {item.type.name}
+                                                                                </p>
+                                                                            )
+                                                                    })
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                    ):
+                            (null)}
+
+                            
                         </div>
                     </div>
                     
