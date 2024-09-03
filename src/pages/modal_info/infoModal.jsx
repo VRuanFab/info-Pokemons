@@ -1,13 +1,17 @@
 import api from "../../api/api"
 import { useState, useEffect } from "react"
 import { IoMdClose } from "react-icons/io";
+import Loading from "../../models/loading";
 
 export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
 
     const [info, setInfo] = useState({})
     const [evolution, setEvolution] = useState([])
+    const [removeLoading, setRemoveLoading] =useState(false)
     
     useEffect(() => {
+
+
         if (isOpenModal  === true){
             const pokemonInfo = async (nome) => {
                 await api.get(`/pokemon/${nome}`)
@@ -108,9 +112,11 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
                                                 setEvolution(arrResponse)
                                             }
                                             pokemonEvoInfo()
+                                            setRemoveLoading(true)
                                     }
                                     else {
                                         setInfo(objPoke)
+                                        setRemoveLoading(true)
                                     }
                                 })
                                 .catch(err => console.log(`Erro na busca de evolução: ${err}`))
@@ -121,14 +127,14 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
                     }
                     evoPokemon()
                 })
+
                 .catch(err => console.log(`Erro na busca de informações gerais: ${err}`))
             }
 
-            pokemonInfo(pokeName)
-            .catch((err) => {
-                console.log(err)
-            })
-
+                pokemonInfo(pokeName)
+                .catch((err) => {
+                    console.log(err)
+                })
         }
     }, [isOpenModal])
 
@@ -212,6 +218,7 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
         return coloring
     }
 
+    
     if(isOpenModal)
     return(
         <>
@@ -223,6 +230,8 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
                     </div>
 
                 <section className="grid grid-cols-2 h-full w-full mt-2">
+                    {!removeLoading && <Loading/>}
+
 
                     <div id="poke-image" className="grid justify-items-center">
 
@@ -262,16 +271,16 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
                             
                         </div>
 
-                        <div className="border-2 rounded-md p-3">
+                        <div className="border-2 rounded-md p-3 grid gap-x-8">
                             
                             {info.type != undefined? (
-                                                        <div className="capitalize grid w-fit gap-y-3">
-                                                            <h2 className="font-semibold">Tipo</h2> 
-                                                            <div className="flex gap-5">
+                                                        <div className="capitalize grid w-fit max-w-[40%] h-fit gap-y-3 font-medium">
+                                                            <h2>Tipo</h2> 
+                                                            <div className="flex gap-5 flex-wrap">
                                                                 {
                                                                     info.type.map((item, i) => {
                                                                         return (
-                                                                                <p key={i} className={`${coloring_types(item.type.name)} px-4 py-[0.31rem] rounded-md outline outline-2 outline-offset-[-5px] outline-white/60 -skew-x-6 font-medium`}>
+                                                                                <p key={i} className={`${coloring_types(item.type.name)} px-4 py-[0.31rem] rounded-md outline outline-2 outline-offset-[-5px] outline-white/60 -skew-x-6`}>
                                                                                     {item.type.name}
                                                                                 </p>
                                                                             )
@@ -283,14 +292,17 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
                             (null)}
 
                             {info.weakness != undefined? (
-                                <div>
-                                    {info.weakness.map((item, i) => {
-                                        return(
-                                            <p key={i}>
-                                                {item}
-                                            </p>
-                                        )
-                                    })}
+                                <div className="grid font-medium max-w-[60%] w-fit h-fit">
+                                    <h1>Fraquezas</h1>
+                                    <div className="flex gap-2 capitalize flex-wrap">
+                                        {info.weakness.map((item, i) => {
+                                            return(
+                                                <p key={i} className={`${coloring_types(item)} px-4 py-[0.31rem] rounded-md outline outline-2 outline-offset-[-5px] outline-white/60 -skew-x-6`}>
+                                                    {item}
+                                                </p>
+                                            )
+                                        })}
+                                    </div>
                                 </div>
                             ):(<></>)}
                         </div>
