@@ -11,7 +11,6 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
     
     useEffect(() => {
 
-
         if (isOpenModal  === true){
             const pokemonInfo = async (nome) => {
                 await api.get(`/pokemon/${nome}`)
@@ -104,19 +103,24 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
                                                     const objPoke = {
                                                                 id: item.data.id,
                                                                 name: item.data.name,
-                                                                img: item.data.sprites.front_default
+                                                                img: item.data.sprites.front_default,
+                                                                order: item.data.order
                                                             }
                                                             arrResponse.push(objPoke)
-                                                            arrResponse = arrResponse.sort((a, b) => a.id - b.id)
+                                                            arrResponse = arrResponse.sort((a, b) => a.order - b.order)
                                                 })
                                                 setEvolution(arrResponse)
                                             }
                                             pokemonEvoInfo()
-                                            setRemoveLoading(true)
+                                            .then(() => {
+                                                setTimeout(() => {setRemoveLoading(true)}, 600)
+                                            })
                                     }
                                     else {
                                         setInfo(objPoke)
-                                        setRemoveLoading(true)
+                                        .then(() => {
+                                            setTimeout(() => {setRemoveLoading(true)}, 600)
+                                        })
                                     }
                                 })
                                 .catch(err => console.log(`Erro na busca de evolução: ${err}`))
@@ -127,7 +131,6 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
                     }
                     evoPokemon()
                 })
-
                 .catch(err => console.log(`Erro na busca de informações gerais: ${err}`))
             }
 
@@ -135,6 +138,7 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
                 .catch((err) => {
                     console.log(err)
                 })
+
         }
     }, [isOpenModal])
 
@@ -218,7 +222,7 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
         return coloring
     }
 
-    
+
     if(isOpenModal)
     return(
         <>
@@ -230,8 +234,6 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
                     </div>
 
                 <section className="grid grid-cols-2 h-full w-full mt-2">
-                    {!removeLoading && <Loading/>}
-
 
                     <div id="poke-image" className="grid justify-items-center">
 
@@ -263,12 +265,27 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
                     <div id="poke-image" className="grid p-10 gap-4">
 
                         <div className="border-2 text-left rounded-md p-3">
-                            <p>Tamanho: {info.height/10} M</p>
+                            <p>Tamanho: {info.height != undefined? (info.height/10):(null)} M</p>
 
-                            Peso: {info.weight/10} Kg
+                            <p>Peso: {info.height != undefined? (info.weight/10):(null)} Kg</p>
 
                             
-                            
+                            {info.status_base != undefined? (
+                                                                <div className="capitalize">
+                                                                    {
+                                                                        info.status_base.map((item, iterable) => {
+                                                                            
+                                                                            return(
+                                                                                <p key={iterable}>
+                                                                                    {item.stat.name}: {item.base_stat}
+                                                                                </p>
+                                                                            )
+                                                                        })
+                                                                    }
+                                                                </div>
+                                                            ):
+                            (<></>)}
+
                         </div>
 
                         <div className="border-2 rounded-md p-3 grid gap-x-8">
@@ -289,9 +306,8 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
                                                             </div>
                                                         </div>
                                                     ):
-                            (null)}
-
-                            {info.weakness != undefined? (
+                            (<></>)}
+                                        {info.weakness != undefined? (
                                 <div className="grid font-medium max-w-[60%] w-fit h-fit">
                                     <h1>Fraquezas</h1>
                                     <div className="flex gap-2 capitalize flex-wrap">
@@ -309,6 +325,7 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
                     </div>
                     
                 </section>
+            {!removeLoading && <Loading/>}
             </div>
 
         </div>

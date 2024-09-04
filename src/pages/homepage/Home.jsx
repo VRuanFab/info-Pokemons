@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import api from "../../api/api"
-import Pokemon_blocks from "../../assets/pokemons_blocks"
+import Pokemon_blocks from "../../models/pokemons_blocks"
 import { FaCaretLeft, FaCaretRight } from "react-icons/fa";
 import pokeball_wallpaper2 from "../../assets/pokeball_wallpaper2.jpg"
 import pokeball_wallpaper3 from "../../assets/pokeball_wallpaper3.png"
@@ -62,7 +62,6 @@ useEffect(() => {
                     </div>
 
                 </div>
-                {/* <Info/> */}
             </div>
         </div>
         </>
