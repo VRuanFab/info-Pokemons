@@ -1,13 +1,17 @@
 import api from "../../api/api"
 import { useState, useEffect } from "react"
 import { IoMdClose } from "react-icons/io";
+import Loading from "../../models/loading";
 
 export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
 
     const [info, setInfo] = useState({})
     const [evolution, setEvolution] = useState([])
+    const [removeLoading, setRemoveLoading] =useState(false)
     
     useEffect(() => {
+
+
         if (isOpenModal  === true){
             const pokemonInfo = async (nome) => {
                 await api.get(`/pokemon/${nome}`)
@@ -15,7 +19,6 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
                     const objPoke = {
                         id: res.data.id,
                         name: res.data.name,
-                        whereFind: res.data.location_area_encounters,
                         height: res.data.height,
                         weight: res.data.weight,
                         forms: res.data.forms,
@@ -24,17 +27,43 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
                         status_base: res.data.stats
                     }
 
-                    const characteristics = async (id) => {
-                        await api.get(`/characteristic/${id}/`)
-                        .then(res => {
-                            console.log(res)
-                        })
-                        .catch(err => {
-                            console.log('Não foi possivel carregar as caracteristicas: ' + err)
-                        })
+                    if(objPoke.id != undefined){
+                        const characteristics = async (id) => {
+                            await api.get(`/pokemon-form/${id}/`)
+                            .then(res => {
+
+                                const tipo = res.data.types
+                                const weaknesses = []
+
+                                ////////////melhorar esse codigo aqui
+                                tipo.forEach(async (item) => {
+                                    await api.get(`${item.type.url}`)
+                                    .then(res => {
+                                        for(let i = 0; i < res.data.damage_relations.double_damage_from.length; i++){
+                                            weaknesses.push(res.data.damage_relations.double_damage_from[i].name)
+                                        }
+                                    })
+                                    .then(() => {
+                                        const uniqs = []
+                                        weaknesses.forEach((item) => {
+                                            if(uniqs.findIndex(element => element === item) === -1){
+                                                uniqs.push(item)
+                                            }
+                                        })
+                                        objPoke.weakness = uniqs
+                                    })
+                                    .catch(err => console.log(err))
+                                })
+                                ////////////////////////////////
+
+                            })
+                            .catch(err => {
+                                console.log('Não foi possivel carregar as caracteristicas: ' + err)
+                            })
+                        }
+                        characteristics(objPoke.id)
                     }
-                    characteristics(info.id)
-                    
+
                     const evoPokemon = async () => {
                         await api.get(`${res.data.species.url}`)
                         .then((evolution) => {
@@ -83,9 +112,11 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
                                                 setEvolution(arrResponse)
                                             }
                                             pokemonEvoInfo()
+                                            setRemoveLoading(true)
                                     }
                                     else {
                                         setInfo(objPoke)
+                                        setRemoveLoading(true)
                                     }
                                 })
                                 .catch(err => console.log(`Erro na busca de evolução: ${err}`))
@@ -96,14 +127,14 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
                     }
                     evoPokemon()
                 })
+
                 .catch(err => console.log(`Erro na busca de informações gerais: ${err}`))
             }
 
-            pokemonInfo(pokeName)
-            .catch((err) => {
-                console.log(err)
-            })
-
+                pokemonInfo(pokeName)
+                .catch((err) => {
+                    console.log(err)
+                })
         }
     }, [isOpenModal])
 
@@ -113,71 +144,71 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
         let coloring = ''
         switch (type){
             case 'fire':
-                coloring = 'bg-[#f04816]'
+                coloring = 'bg-[#f04816]/50'
                 break;
 
             case 'bug':
-                coloring = 'bg-[#3f8a3b]'
+                coloring = 'bg-[#3f8a3b]/50'
                 break;
 
             case 'poison':
-                coloring = 'bg-[#a946fa]'
+                coloring = 'bg-[#a946fa]/50'
                 break;
 
             case 'psychic':
-                coloring = 'bg-[#fa57b9]'
+                coloring = 'bg-[#fa57b9]/50'
                 break;
             
             case 'dark':
-                coloring = 'bg-[#383838]'
+                coloring = 'bg-[#383838]/50'
                 break;
 
             case 'water':
-                coloring = 'bg-[#2e77ff]'
+                coloring = 'bg-[#2e77ff]/50'
                 break;
 
             case 'grass':
-                coloring = 'bg-[#30ba45]'
+                coloring = 'bg-[#30ba45]/50'
                 break;
 
             case 'dragon':
-                coloring = 'bg-[#426bff]'
+                coloring = 'bg-[#426bff]/50'
                 break;
 
             case 'electric':
-                coloring = 'bg-[#f2c246]'
+                coloring = 'bg-[#f2c246]/50'
                 break;
 
             case 'fairy':
-                coloring = 'bg-[#ff87f3]'
+                coloring = 'bg-[#ff87f3]/50'
                 break;
 
             case 'fighting':
-                coloring = 'bg-[#ba5f3c]'
+                coloring = 'bg-[#ba5f3c]/50'
                 break;
 
             case 'flying':
-                coloring = 'bg-[#37506b]'
+                coloring = 'bg-[#37506b]/50'
                 break;
             
             case 'ghost':
-                coloring = 'bg-[#655080]'
+                coloring = 'bg-[#655080]/50'
                 break;
 
             case 'ground':
-                coloring = 'bg-[#c7985b]'
+                coloring = 'bg-[#c7985b]/50'
                 break;
 
             case 'ice':
-                coloring = 'bg-[#83fafc]'
+                coloring = 'bg-[#83fafc]/50'
                 break;
 
             case 'normal':
-                coloring = 'bg-[#c7d0d6]'
+                coloring = 'bg-[#c7d0d6]/50'
                 break;
 
             case 'steel':
-                coloring = 'bg-[#86949e]'
+                coloring = 'bg-[#86949e]/50'
                 break;
 
             case 'rock':
@@ -187,6 +218,7 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
         return coloring
     }
 
+    
     if(isOpenModal)
     return(
         <>
@@ -198,6 +230,8 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
                     </div>
 
                 <section className="grid grid-cols-2 h-full w-full mt-2">
+                    {!removeLoading && <Loading/>}
+
 
                     <div id="poke-image" className="grid justify-items-center">
 
@@ -237,16 +271,16 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
                             
                         </div>
 
-                        <div className="border-2 rounded-md p-3">
+                        <div className="border-2 rounded-md p-3 grid gap-x-8">
                             
                             {info.type != undefined? (
-                                                        <div className="capitalize grid w-fit gap-y-3">
-                                                            <h2 className="font-semibold">Tipo</h2> 
-                                                            <div className="flex gap-5">
+                                                        <div className="capitalize grid w-fit max-w-[40%] h-fit gap-y-3 font-medium">
+                                                            <h2>Tipo</h2> 
+                                                            <div className="flex gap-5 flex-wrap">
                                                                 {
                                                                     info.type.map((item, i) => {
                                                                         return (
-                                                                                <p key={i} className={`${coloring_types(item.type.name)} px-4 py-[0.31rem] rounded-md outline outline-2 outline-offset-[-5px] outline-white -skew-x-6 font-medium`}>
+                                                                                <p key={i} className={`${coloring_types(item.type.name)} px-4 py-[0.31rem] rounded-md outline outline-2 outline-offset-[-5px] outline-white/60 -skew-x-6`}>
                                                                                     {item.type.name}
                                                                                 </p>
                                                                             )
@@ -257,7 +291,20 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
                                                     ):
                             (null)}
 
-                            
+                            {info.weakness != undefined? (
+                                <div className="grid font-medium max-w-[60%] w-fit h-fit">
+                                    <h1>Fraquezas</h1>
+                                    <div className="flex gap-2 capitalize flex-wrap">
+                                        {info.weakness.map((item, i) => {
+                                            return(
+                                                <p key={i} className={`${coloring_types(item)} px-4 py-[0.31rem] rounded-md outline outline-2 outline-offset-[-5px] outline-white/60 -skew-x-6`}>
+                                                    {item}
+                                                </p>
+                                            )
+                                        })}
+                                    </div>
+                                </div>
+                            ):(<></>)}
                         </div>
                     </div>
                     
