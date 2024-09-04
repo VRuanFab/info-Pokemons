@@ -220,7 +220,7 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
                                             </div>
                                             )
                                     }):
-                                    (<></>)
+                                    (<div className="font-medium w-full">Não possui Linha evolutiva</div>)
                                 }
                             </div>
                         </div>
