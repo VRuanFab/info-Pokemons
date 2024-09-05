@@ -1,3 +1,0 @@
-- organizar ordem de evolução
-- estilizar o modal
-- acrescentar informações

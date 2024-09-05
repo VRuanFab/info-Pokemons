@@ -113,13 +113,13 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
                                             }
                                             pokemonEvoInfo()
                                             .then(() => {
-                                                setTimeout(() => {setRemoveLoading(true)}, 600)
+                                                // setTimeout(() => {setRemoveLoading(true)}, 600)
                                             })
                                     }
                                     else {
                                         setInfo(objPoke)
                                         .then(() => {
-                                            setTimeout(() => {setRemoveLoading(true)}, 600)
+                                            // setTimeout(() => {setRemoveLoading(true)}, 600)
                                         })
                                     }
                                 })
