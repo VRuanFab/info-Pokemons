@@ -113,13 +113,13 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
                                             }
                                             pokemonEvoInfo()
                                             .then(() => {
-                                                // setTimeout(() => {setRemoveLoading(true)}, 600)
+                                                setTimeout(() => {setRemoveLoading(true)}, 600)
                                             })
                                     }
                                     else {
                                         setInfo(objPoke)
                                         .then(() => {
-                                            // setTimeout(() => {setRemoveLoading(true)}, 600)
+                                            setTimeout(() => {setRemoveLoading(true)}, 600)
                                         })
                                     }
                                 })
@@ -288,39 +288,43 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
 
                         </div>
 
-                        <div className="border-2 rounded-md p-3 grid gap-x-8">
+                        <div className="border-2 rounded-md p-3 flex justify-between">
                             
-                            {info.type != undefined? (
-                                                        <div className="capitalize grid w-fit max-w-[40%] h-fit gap-y-3 font-medium">
-                                                            <h2>Tipo</h2> 
-                                                            <div className="flex gap-5 flex-wrap">
-                                                                {
-                                                                    info.type.map((item, i) => {
-                                                                        return (
-                                                                                <p key={i} className={`${coloring_types(item.type.name)} px-4 py-[0.31rem] rounded-md outline outline-2 outline-offset-[-5px] outline-white/60 -skew-x-6`}>
-                                                                                    {item.type.name}
-                                                                                </p>
-                                                                            )
-                                                                    })
-                                                                }
+                            <div className="border-2 w-[46%]">
+                                {info.type != undefined? (
+                                                            <div className="capitalize grid w-fit max-w-[40%] h-fit gap-y-3 font-medium">
+                                                                <h2>Tipo</h2> 
+                                                                <div className="flex gap-5 flex-wrap">
+                                                                    {
+                                                                        info.type.map((item, i) => {
+                                                                            return (
+                                                                                    <p key={i} className={`${coloring_types(item.type.name)} px-4 py-[0.31rem] rounded-md outline outline-2 outline-offset-[-5px] outline-white/60 -skew-x-6`}>
+                                                                                        {item.type.name}
+                                                                                    </p>
+                                                                                )
+                                                                        })
+                                                                    }
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    ):
-                            (<></>)}
-                                        {info.weakness != undefined? (
-                                <div className="grid font-medium max-w-[60%] w-fit h-fit">
-                                    <h1>Fraquezas</h1>
-                                    <div className="flex gap-2 capitalize flex-wrap">
-                                        {info.weakness.map((item, i) => {
-                                            return(
-                                                <p key={i} className={`${coloring_types(item)} px-4 py-[0.31rem] rounded-md outline outline-2 outline-offset-[-5px] outline-white/60 -skew-x-6`}>
-                                                    {item}
-                                                </p>
-                                            )
-                                        })}
+                                                        ):
+                                (<></>)}
+                            </div>
+                            <div className="border-2 w-[52%] flex">
+                                            {info.weakness != undefined? (
+                                    <div className="grid font-medium max-w-[60%] w-fit h-fit">
+                                        <h1>Fraquezas</h1>
+                                        <div className="flex gap-2 capitalize flex-wrap">
+                                            {info.weakness.map((item, i) => {
+                                                return(
+                                                    <p key={i} className={`${coloring_types(item)} px-4 py-[0.31rem] rounded-md outline outline-2 outline-offset-[-5px] outline-white/60 -skew-x-6`}>
+                                                        {item}
+                                                    </p>
+                                                )
+                                            })}
+                                        </div>
                                     </div>
-                                </div>
-                            ):(<></>)}
+                                ):(<></>)}
+                            </div>
                         </div>
                     </div>
                     
