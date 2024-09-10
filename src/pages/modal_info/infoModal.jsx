@@ -228,9 +228,9 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
         <>
         <div className="fixed top-0 left-0 right-0 bottom-0 z-50 bg-gray-700/40 w-screen h-screen">
             
-            <div className="bg-[#b3b3b3] w-[80%] h-[80%] fixed top-[10%] left-[10%] rounded-lg">
+            <div className="bg-[#b6b6b6] w-[80%] h-[80%] fixed top-[10%] left-[10%] rounded-lg border-4 border-slate-200">
                     <div onClick={closeModal} className="w-full h-fit relative">
-                        <IoMdClose className="absolute right-3 top-2 hover:cursor-pointer w-6 h-fit"/>
+                        <IoMdClose className="absolute right-3 top-2 hover:cursor-pointer w-7 h-fit hover:text-white transition-all ease-in-out delay-150"/>
                     </div>
 
                 <section className="grid grid-cols-2 h-full w-full mt-2">
@@ -262,12 +262,13 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
                         </div>
 
                     </div>
-                    <div id="poke-image" className="grid p-10 gap-4">
 
-                        <div className="border-2 text-left rounded-md p-3">
-                            <p>Tamanho: {info.height != undefined? (info.height/10):(null)} M</p>
+                    <div id="poke-image" className="grid p-6 gap-6 mt-2">
 
-                            <p>Peso: {info.height != undefined? (info.weight/10):(null)} Kg</p>
+                        <div className="border-2 text-left rounded-md p-3 h-[60%] self-center">
+                            <p><b>Tamanho:</b> {info.height != undefined? (info.height/10):(null)} M</p>
+
+                            <p><b>Peso:</b> {info.height != undefined? (info.weight/10):(null)} Kg</p>
 
                             
                             {info.status_base != undefined? (
@@ -277,7 +278,7 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
                                                                             
                                                                             return(
                                                                                 <p key={iterable}>
-                                                                                    {item.stat.name}: {item.base_stat}
+                                                                                    <b>{item.stat.name}</b>: {item.base_stat}
                                                                                 </p>
                                                                             )
                                                                         })
@@ -288,7 +289,7 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
 
                         </div>
 
-                        <div className="rounded-md flex justify-between">
+                        <div className="rounded-md flex justify-between self-start">
                             
                             <div className="border-2 w-[46%] p-2 rounded-md">
                                 {info.type != undefined? (
@@ -313,7 +314,7 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
 
                             <div className="border-2 w-[51%] flex p-2 rounded-md">
                                             {info.weakness != undefined? (
-                                    <div className="grid font-medium h-fit gap-y-3">
+                                    <div className="grid font-medium h-fit gap-y-3 w-full">
                                         <h1>Fraquezas</h1>
                                         <div className="flex gap-3 capitalize flex-wrap">
                                             {info.weakness.map((item, i) => {
