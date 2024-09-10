@@ -265,7 +265,7 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
 
                     <div id="poke-image" className="grid p-6 gap-6 mt-2">
 
-                        <div className="border-2 text-left rounded-md p-3 h-[60%] self-center">
+                        <div className="border-2 text-left rounded-md p-3 h-fit self-center">
                             <p><b>Tamanho:</b> {info.height != undefined? (info.height/10):(null)} M</p>
 
                             <p><b>Peso:</b> {info.height != undefined? (info.weight/10):(null)} Kg</p>
