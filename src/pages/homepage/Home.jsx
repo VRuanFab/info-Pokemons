@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import api from "../../api/api"
 import Pokemon_blocks from "../../models/pokemons_blocks"
-import { FaCaretLeft, FaCaretRight } from "react-icons/fa";
+import { FaSearch, FaCaretLeft, FaCaretRight } from "react-icons/fa";
 import pokeball_wallpaper2 from "../../assets/pokeball_wallpaper2.jpg"
 import pokeball_wallpaper3 from "../../assets/pokeball_wallpaper3.png"
 import pokeball_wallpaper4 from "../../assets/pokeball_wallpaper4.jpg"
@@ -12,9 +12,10 @@ export default function Homepage(){
 
     const [arrayPokemons, setArraysPokemon] = useState([])
     const [page, setPage] = useState(0)
+    const [pokename, setPokename] = useState('')
     const pagination = page * 21
-useEffect(() => {
 
+useEffect(() => {
     const fetchPokemon = async () => {
         const pokePromise = Array.from({ length: 21 }, (v, i) => {
             return api.get(`pokemon/${i + 1 + pagination}`)
@@ -32,6 +33,17 @@ useEffect(() => {
     fetchPokemon()
 }, [page])
 
+async function searchPokemon(){
+    await api.get('/pokemon?limit=100000&offset=0')
+        .then((res) => {
+            console.log(res)
+        })
+        .catch((err) => {
+            console.log(err)
+        })
+    }
+
+
     return (
         <>
         <div className={`w-screen h-screen grid justify-center content-center`} style={{backgroundImage: `url(${pokeball_wallpaper2})`}}>
@@ -39,7 +51,11 @@ useEffect(() => {
                 <div id="poke-image" className="w-[90%] h-[90%] bg-gray-700 rounded-md relative grid">
 
                     <div className="w-full h-fit absolute top-[4%] flex justify-end px-[5%]">
-                        <input type="search" name="search" id="search_pokemon" className="rounded-full px-3 py-[0.28rem] focus:outline-2 focus:outline outline-offset-0 outline-red-400"/>
+                        <div className="px-3 flex items-center bg-white gap-2 w-fit rounded-full">
+                            <input type="search" onChange={(e) => {setPokename(e.target.value)}} name="search" id="search_pokemon" className="justify-start py-[0.28rem] focus:outline-0 bg-transparent"/>
+
+                            <FaSearch className="hover:cursor-pointer" onClick={searchPokemon}/>
+                        </div>
                     </div>
 
                     <div id="pokemon_body" className="w-[90%] h-[85%] mt-[5%] py-2 bg-gray-200 rounded-md place-self-center">
