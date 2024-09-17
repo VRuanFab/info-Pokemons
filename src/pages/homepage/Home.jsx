@@ -36,7 +36,12 @@ useEffect(() => {
 async function searchPokemon(){
     await api.get('/pokemon?limit=100000&offset=0')
         .then((res) => {
-            console.log(res)
+            // console.log(res.data.results)
+            const pokemonsFetch = res.data.results
+            const resultadoPesquisa = pokemonsFetch.filter((item) => {
+                console.log(item.toLowerCase().includes(searchPokemon.toLowerCase()))
+            })
+            console.log(resultadoPesquisa)
         })
         .catch((err) => {
             console.log(err)
