@@ -123,20 +123,34 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
                                         })
                                     }
                                 })
-                                .catch(err => console.log(`Erro na busca de evolução: ${err}`))
+                                .catch(err => {
+                                    console.log(`Erro na busca de evolução: ${err}`)
+                                    setRemoveLoading(true)
+                                })
                             }
                             nextEvolutionCall()
+                            .catch((err) => {
+                                console.log(err)
+                            })
                         })
-                        .catch(err => {console.log(`Erro na busca de evolução: ${err}`)})
+                        .catch(err => {
+                            console.log(`Erro na busca de evolução: ${err}`)
+                            setRemoveLoading(true)
+
+                        })
                     }
                     evoPokemon()
                 })
-                .catch(err => console.log(`Erro na busca de informações gerais: ${err}`))
+                .catch(err => {
+                    console.log(`Erro na busca de informações gerais: ${err}`)
+                })
             }
-
-                pokemonInfo(pokeName)
-                .catch((err) => {
-                    console.log(err)
+            
+            pokemonInfo(pokeName)
+            .catch((err) => {
+                console.log(err)
+                setRemoveLoading(true)
+                closeModal
                 })
 
         }

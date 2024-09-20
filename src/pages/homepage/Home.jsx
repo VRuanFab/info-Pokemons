@@ -7,6 +7,7 @@ import pokeball_wallpaper3 from "../../assets/pokeball_wallpaper3.png"
 import pokeball_wallpaper4 from "../../assets/pokeball_wallpaper4.jpg"
 import pokeball_wallpaper5 from "../../assets/pokeball_wallpaper5.jpg"
 import pokeball_wallpaper_dark from "../../assets/pokeball_wallpaper_dark.jpg"
+import axios from "axios";
 
 export default function Homepage(){
 
@@ -33,21 +34,46 @@ useEffect(() => {
     fetchPokemon()
 }, [page])
 
+
+
 async function searchPokemon(){
+    const arrResultadoPesquisa = []
     await api.get('/pokemon?limit=100000&offset=0')
         .then((res) => {
-            // console.log(res.data.results)
             const pokemonsFetch = res.data.results
-            const resultadoPesquisa = pokemonsFetch.filter((item) => {
-                console.log(item.toLowerCase().includes(searchPokemon.toLowerCase()))
+            pokemonsFetch.filter(async (item) => {
+                const {name, url} = item
+
+                if (name.toLowerCase().includes(pokename.toLowerCase())){
+                    arrResultadoPesquisa.push(item)
+                }
             })
-            console.log(resultadoPesquisa)
+            if (arrResultadoPesquisa.length != 0){
+                const pokemonsPesquisados = async () => {
+                    const promPokeSearch = Array.from({length: arrResultadoPesquisa.length}, (item, i) => {
+                        return axios.get(arrResultadoPesquisa[i].url)
+                    })
+            
+                    const resultPromPoke = await Promise.all(promPokeSearch)
+            
+                    let pokemonMap = resultPromPoke.map((pokemon) => ({
+                        name: pokemon.data.name,
+                        img: pokemon.data.sprites.front_default,
+                        id: pokemon.data.id
+                    }))
+                    setArraysPokemon(pokemonMap)
+                    console.log(pokemonMap)
+                }
+                pokemonsPesquisados()
+            } else {
+                window.alert('nenhum pokemon encontrado')
+            }
         })
         .catch((err) => {
             console.log(err)
         })
     }
-
+    
 
     return (
         <>
