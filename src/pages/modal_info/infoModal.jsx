@@ -81,7 +81,7 @@ export default function Info({isOpenModal, closeModal, imgPrincipal, pokeName}){
 
                                         arrEvo.push(evolutionLine.species.name)
 
-                                        
+
                                         if(continueEvo.length > 0){
                                             arrEvo.push(continueEvo[0].species.name)
                                         }

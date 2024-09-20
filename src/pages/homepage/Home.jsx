@@ -14,37 +14,36 @@ export default function Homepage(){
     const [arrayPokemons, setArraysPokemon] = useState([])
     const [page, setPage] = useState(0)
     const [pokename, setPokename] = useState('')
+    const [activeSearch, setActiveSearch] = useState(false)
     const pagination = page * 21
 
 useEffect(() => {
-    const fetchPokemon = async () => {
-        const pokePromise = Array.from({ length: 21 }, (v, i) => {
-            return api.get(`pokemon/${i + 1 + pagination}`)
-        })
-
-        const results = await Promise.all(pokePromise)
-
-        const pokemons_show = results.map(res => ({
-            name: res.data.name,
-            img: res.data.sprites.front_default,
-            id: res.data.id
-        }))
-        setArraysPokemon(pokemons_show)
-    }
-    fetchPokemon()
-}, [page])
-
-
-
-async function searchPokemon(){
-    const arrResultadoPesquisa = []
-    await api.get('/pokemon?limit=100000&offset=0')
+    if (!activeSearch){
+        const fetchPokemon = async () => {
+            const pokePromise = Array.from({ length: 21 }, (v, i) => {
+                return api.get(`pokemon/${i + 1 + pagination}`)
+            })
+    
+            const results = await Promise.all(pokePromise)
+    
+            const pokemons_show = results.map(res => ({
+                name: res.data.name,
+                img: res.data.sprites.front_default,
+                id: res.data.id
+            }))
+            setArraysPokemon(pokemons_show)
+        }
+        fetchPokemon()
+    } else {
+        const fetchPesquisa = async () => {
+            const arrResultadoPesquisa = []
+            await api.get('/pokemon?limit=100000&offset=0')
         .then((res) => {
             const pokemonsFetch = res.data.results
             pokemonsFetch.filter(async (item) => {
                 const {name, url} = item
 
-                if (name.toLowerCase().includes(pokename.toLowerCase())){
+                if (name.toLowerCase().startsWith(pokename.toLowerCase())){
                     arrResultadoPesquisa.push(item)
                 }
             })
@@ -53,16 +52,35 @@ async function searchPokemon(){
                     const promPokeSearch = Array.from({length: arrResultadoPesquisa.length}, (item, i) => {
                         return axios.get(arrResultadoPesquisa[i].url)
                     })
-            
+
                     const resultPromPoke = await Promise.all(promPokeSearch)
-            
-                    let pokemonMap = resultPromPoke.map((pokemon) => ({
-                        name: pokemon.data.name,
-                        img: pokemon.data.sprites.front_default,
-                        id: pokemon.data.id
-                    }))
-                    setArraysPokemon(pokemonMap)
-                    console.log(pokemonMap)
+
+                    if (resultPromPoke.length > 21){
+                        const separandoPokemons = []
+                        let pageSearch = pagination
+                        let ultimoIndex = resultPromPoke.length < pageSearch + 21? resultPromPoke.length : pageSearch + 21
+                        console.log(pageSearch, ultimoIndex)
+
+                        for (let i = pageSearch; i < ultimoIndex; i++){
+                            separandoPokemons.push(resultPromPoke[i])
+                        }
+
+                        let pokemonMap = separandoPokemons.map((pokemon) => ({
+                            name: pokemon.data.name,
+                            img: pokemon.data.sprites.front_default,
+                            id: pokemon.data.id
+                        }))
+                        setArraysPokemon(pokemonMap)
+                    } else {
+
+                        let pokemonMap = resultPromPoke.map((pokemon) => ({
+                            name: pokemon.data.name,
+                            img: pokemon.data.sprites.front_default,
+                            id: pokemon.data.id
+                        }))
+                        setArraysPokemon(pokemonMap)
+                    }
+                    
                 }
                 pokemonsPesquisados()
             } else {
@@ -72,6 +90,14 @@ async function searchPokemon(){
         .catch((err) => {
             console.log(err)
         })
+        }
+        fetchPesquisa()
+    }
+
+}, [page, pokename])
+
+async function searchPokemon(isActive){
+    setActiveSearch(isActive)
     }
     
 
@@ -85,7 +111,7 @@ async function searchPokemon(){
                         <div className="px-3 flex items-center bg-white gap-2 w-fit rounded-full">
                             <input type="search" onChange={(e) => {setPokename(e.target.value)}} name="search" id="search_pokemon" className="justify-start py-[0.28rem] focus:outline-0 bg-transparent"/>
 
-                            <FaSearch className="hover:cursor-pointer" onClick={searchPokemon}/>
+                            <FaSearch className="hover:cursor-pointer" onClick={() => {pokename? searchPokemon(true):searchPokemon(false)}}/>
                         </div>
                     </div>
 
