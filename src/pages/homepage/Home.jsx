@@ -18,7 +18,7 @@ export default function Homepage(){
     const pagination = page * 21
 
 useEffect(() => {
-    if (!activeSearch){
+    if (!pokename){
         const fetchPokemon = async () => {
             const pokePromise = Array.from({ length: 21 }, (v, i) => {
                 return api.get(`pokemon/${i + 1 + pagination}`)
@@ -34,67 +34,69 @@ useEffect(() => {
             setArraysPokemon(pokemons_show)
         }
         fetchPokemon()
-    } else {
-        const fetchPesquisa = async () => {
-            const arrResultadoPesquisa = []
-            await api.get('/pokemon?limit=100000&offset=0')
-        .then((res) => {
-            const pokemonsFetch = res.data.results
-            pokemonsFetch.filter(async (item) => {
-                const {name, url} = item
+    }
+}, [page, pokename])
 
-                if (name.toLowerCase().startsWith(pokename.toLowerCase())){
-                    arrResultadoPesquisa.push(item)
-                }
-            })
-            if (arrResultadoPesquisa.length != 0){
-                const pokemonsPesquisados = async () => {
-                    const promPokeSearch = Array.from({length: arrResultadoPesquisa.length}, (item, i) => {
-                        return axios.get(arrResultadoPesquisa[i].url)
-                    })
+async function searchPoke(){
+    const fetchPesquisa = async () => {
+        const arrResultadoPesquisa = []
+        await api.get('/pokemon?limit=100000&offset=0')
+    .then((res) => {
+        const pokemonsFetch = res.data.results
+        pokemonsFetch.filter(async (item) => {
+            const {name, url} = item
 
-                    const resultPromPoke = await Promise.all(promPokeSearch)
-
-                    if (resultPromPoke.length > 21){
-                        const separandoPokemons = []
-                        let pageSearch = pagination
-                        let ultimoIndex = resultPromPoke.length < pageSearch + 21? resultPromPoke.length : pageSearch + 21
-                        console.log(pageSearch, ultimoIndex)
-
-                        for (let i = pageSearch; i < ultimoIndex; i++){
-                            separandoPokemons.push(resultPromPoke[i])
-                        }
-
-                        let pokemonMap = separandoPokemons.map((pokemon) => ({
-                            name: pokemon.data.name,
-                            img: pokemon.data.sprites.front_default,
-                            id: pokemon.data.id
-                        }))
-                        setArraysPokemon(pokemonMap)
-                    } else {
-
-                        let pokemonMap = resultPromPoke.map((pokemon) => ({
-                            name: pokemon.data.name,
-                            img: pokemon.data.sprites.front_default,
-                            id: pokemon.data.id
-                        }))
-                        setArraysPokemon(pokemonMap)
-                    }
-                    
-                }
-                pokemonsPesquisados()
-            } else {
-                window.alert('nenhum pokemon encontrado')
+            if (name.toLowerCase().startsWith(pokename.toLowerCase())){
+                arrResultadoPesquisa.push(item)
             }
         })
-        .catch((err) => {
-            console.log(err)
-        })
-        }
-        fetchPesquisa()
-    }
+        if (arrResultadoPesquisa.length != 0){
+            const pokemonsPesquisados = async () => {
+                const promPokeSearch = Array.from({length: arrResultadoPesquisa.length}, (item, i) => {
+                    return axios.get(arrResultadoPesquisa[i].url)
+                })
 
-}, [page, pokename])
+                const resultPromPoke = await Promise.all(promPokeSearch)
+
+                if (resultPromPoke.length > 21){
+                    const separandoPokemons = []
+                    let pageSearch = pagination
+                    let ultimoIndex = resultPromPoke.length < pageSearch + 21? resultPromPoke.length : pageSearch + 21
+                    console.log(pageSearch, ultimoIndex)
+
+                    for (let i = pageSearch; i < ultimoIndex; i++){
+                        separandoPokemons.push(resultPromPoke[i])
+                    }
+
+                    let pokemonMap = separandoPokemons.map((pokemon) => ({
+                        name: pokemon.data.name,
+                        img: pokemon.data.sprites.front_default,
+                        id: pokemon.data.id
+                    }))
+                    setArraysPokemon(pokemonMap)
+                } else {
+
+                    let pokemonMap = resultPromPoke.map((pokemon) => ({
+                        name: pokemon.data.name,
+                        img: pokemon.data.sprites.front_default,
+                        id: pokemon.data.id
+                    }))
+                    setArraysPokemon(pokemonMap)
+                }
+                
+            }
+            pokemonsPesquisados()
+        } else {
+            window.alert('nenhum pokemon encontrado')
+        }
+    })
+    .catch((err) => {
+        console.log(err)
+    })
+    }
+    fetchPesquisa()
+}
+
 
 async function searchPokemon(isActive){
     setActiveSearch(isActive)
@@ -111,7 +113,7 @@ async function searchPokemon(isActive){
                         <div className="px-3 flex items-center bg-white gap-2 w-fit rounded-full">
                             <input type="search" onChange={(e) => {setPokename(e.target.value)}} name="search" id="search_pokemon" className="justify-start py-[0.28rem] focus:outline-0 bg-transparent"/>
 
-                            <FaSearch className="hover:cursor-pointer" onClick={() => {pokename? searchPokemon(true):searchPokemon(false)}}/>
+                            <FaSearch className="hover:cursor-pointer" onClick={() => {searchPoke()}}/>
                         </div>
                     </div>
 
