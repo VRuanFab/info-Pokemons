@@ -37,6 +37,10 @@ useEffect(() => {
     }
 }, [page, pokename])
 
+useEffect(() => {searchPoke()}, [page])
+useEffect(() => {!pokename? setPage(0):null }, [pokename])
+
+
 async function searchPoke(){
     const fetchPesquisa = async () => {
         const arrResultadoPesquisa = []
@@ -98,27 +102,24 @@ async function searchPoke(){
 }
 
 
-async function searchPokemon(isActive){
-    setActiveSearch(isActive)
-    }
     
 
     return (
         <>
         <div className={`w-screen h-screen grid justify-center content-center`} style={{backgroundImage: `url(${pokeball_wallpaper2})`}}>
             <div className="w-screen h-screen grid place-items-center">
-                <div id="poke-image" className="w-[90%] h-[90%] bg-gray-700 rounded-md relative grid">
+                <div id="poke-image" className="w-[90%] h-[80%] bg-gray-700 rounded-md relative grid">
 
                     <div className="w-full h-fit absolute top-[4%] flex justify-end px-[5%]">
                         <div className="px-3 flex items-center bg-white gap-2 w-fit rounded-full">
                             <input type="search" onChange={(e) => {setPokename(e.target.value)}} name="search" id="search_pokemon" className="justify-start py-[0.28rem] focus:outline-0 bg-transparent"/>
 
-                            <FaSearch className="hover:cursor-pointer" onClick={() => {searchPoke()}}/>
+                            <FaSearch className="hover:cursor-pointer" onClick={() => {searchPoke(), setPage(0)}}/>
                         </div>
                     </div>
 
                     <div id="pokemon_body" className="w-[90%] h-[85%] mt-[5%] py-2 bg-gray-200 rounded-md place-self-center">
-                        <section className="h-[90%] w-full grid px-3 py-2 items-center justify-items-center grid-cols-7 relative">
+                        <section className="h-[90%] w-full grid px-3 py-2 items-center justify-items-center grid-cols-7 relative content-start gap-y-11">
                         {
                             arrayPokemons.map((infos) => {
                                 return(
@@ -132,7 +133,7 @@ async function searchPokemon(isActive){
                         <div className="flex justify-end px-9 items-center mt-[2%]">
                             {page === 0 ? <></> : <FaCaretLeft onClick={() => setPage(page - 1)} className="hover:cursor-pointer w-7 h-fit"/>} 
                                 <label className="text-lg"> {page + 1} </label> 
-                            <FaCaretRight onClick={() => setPage(page + 1)} className="hover:cursor-pointer w-7 h-fit"/>
+                            {arrayPokemons.length === 21? (<FaCaretRight onClick={() => setPage(page + 1)} className="hover:cursor-pointer w-7 h-fit"/>):(<></>)}
                         </div>
                     </div>
 
