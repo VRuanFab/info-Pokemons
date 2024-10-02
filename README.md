@@ -1,8 +1,10 @@
-# React + Vite
+# Aplicativo Web de Pesquisa de Pokémons
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Este é um aplicativo web desenvolvido para pesquisar e exibir diversas informações sobre os Pokémons. Utilizando a [PokeAPI](https://pokeapi.co/), o aplicativo permite que os usuários acessem dados detalhados sobre qualquer Pokémon, incluindo:
 
-Currently, two official plugins are available:
+- **Fraquezas e Resistências**: Veja quais tipos de Pokémon têm vantagem ou desvantagem contra outros em batalhas.
+- **Evoluções**: Descubra as diferentes formas evolutivas de cada Pokémon.
+- **Informações Técnicas**: Acesse dados como estatísticas base (HP, ataque, defesa, etc.), habilidades, tipos e muito mais.
+- **Pesquisa por Nome**: Encontre rapidamente qualquer Pokémon pelo seu nome, facilitando a navegação e busca no aplicativo.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Este projeto é ideal para fãs de Pokémon que desejam obter informações rápidas e precisas sobre seus Pokémons favoritos de maneira simples e interativa.
